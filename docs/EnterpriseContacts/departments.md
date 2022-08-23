@@ -7,6 +7,6 @@
 ```go
 import "github.com/addcnos/youdu"
 
-var depId int = 1
-depts, err := youdu.NewDept().GetList(depId)
+var deptId int = 1 // 部门ID
+depts, err := youdu.NewDept().GetList(deptId)
 ```
