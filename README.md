@@ -79,4 +79,4 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
 标准 Readme 遵循 [Contributor Covenant](http://contributor-covenant.org/version/1/3/0/) 行为规范。
 
 ##  License
-[MIT](LICENSE) © Richard Littauer
+[ MIT License](LICENSE)
