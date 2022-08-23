@@ -6,8 +6,7 @@ import (
 )
 
 const (
-	deptListUrl  = "/cgi/dept/list"
-	deptGetIdUrl = "/cgi/dept/getid"
+	deptListUrl = "/cgi/dept/list"
 )
 
 type Dept struct {

@@ -2,19 +2,19 @@ name: Lint
 
 on:
   push:
+    tags:
+      - v*
     branches:
+      - master
       - main
+      - v9
   pull_request:
-    branches:
-      - main
 
 jobs:
-  lint:
+  golangci:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v2
-        with:
-          version: latest
+        uses: golangci/golangci-lint-action@v3
