@@ -1,4 +1,4 @@
-[查看所有](/README.md#youdu-sdk)
+[查看所有](/docs/SessionMessage/README.md)
 
 ### 发送消息
 

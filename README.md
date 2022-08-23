@@ -43,8 +43,8 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
    发送文本消息 
     ```go
     yd.Message().Send(&message.TextMessage{
-        ToUser:  "11111",//指定用户
-        ToDept:  "",//指定部门
+        ToUser:  "user1|user2",//指定用户
+        ToDept:  "dep1|dep2",//指定部门
         MsgType: message.MsgTypeText,
         Text: &message.TextItem{
           Content: "test",
@@ -53,19 +53,19 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
     ```
 ## 详细文档
 关于具体的使用方法，请参照以下文档
-1. [企业应用](docs/enterpriseApplication/enterpriseApplication.md) 
+1. [企业应用](docs/EnterpriseApplication/README.md) 
       - [应用消息](docs/EnterpriseApplication/enterpriseMessage.md#应用消息) 
       - [弹窗消息](docs/EnterpriseApplication/popWindowMessage.md#弹窗消息) 
-2. [单点登录](docs/SSO/sso.md) 
-3. [会话管理](docs/SSO//sso.md)
-4. [会话消息](docs/SessionMessage/sessionMessage.md)
-      - [发送消息](docs/EnterpriseApplication/sendSessionMessage.md)
+2. [单点登录](docs/SSO/README.md) 
+3. [会话管理](docs/SessionManage/README.md)
+4. [会话消息](docs/SessionMessage/README.md)
+      - [发送消息](docs/SessionMessage/sendSessionMessage.md)
 5. [企业通讯录](docs/EnterpriseContacts/README.md)
       - [部门管理](docs/EnterpriseContacts/departments.md)
       - [用户管理](docs/EnterpriseContacts/users.md)
       - [第三方认证](docs/EnterpriseContacts/thirdAuth.md)
       - [群管理](docs/EnterpriseContacts/groups.md)
-6. [素材管理](docs/media/README.md)
+6. [素材管理](docs/Media/README.md)
 ## 如何贡献
 
 非常欢迎你的加入！[提一个 Issue](https://github.com/addcnos/youdu/issues/new) 或者提交一个 Pull Request。

@@ -1,4 +1,4 @@
-[查看所有](/README.md#youdu-sdk)
+[查看所有](/docs/EnterpriseApplication/README.md)
 ## 弹窗消息
 
 参考 [有度即时通讯服务端 API 文档 -- 企业应用 -- 发送弹窗消息](https://youdu.im/doc/api/c01_00006.html)

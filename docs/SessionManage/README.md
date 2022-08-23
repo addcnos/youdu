@@ -1,4 +1,5 @@
-[查看所有](/README.md#youdu-sdk)
+[查看所有](/README.md#详细文档)
+
 ## 会话管理
 
 参考 [有度即时通讯服务端 API 文档 -- 会话管理](https://youdu.im/doc/api/c01_00008.html)

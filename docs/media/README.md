@@ -1,4 +1,4 @@
-[查看所有](https://github.com/addcnos/youdu#%E8%AF%A6%E7%BB%86%E6%96%87%E6%A1%A3)
+[查看所有](/README.md#详细文档)
 
 ## 素材管理
 

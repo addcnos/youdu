@@ -1,4 +1,4 @@
-[查看所有](/README.md#youdu-sdk)
+[查看所有](/README.md#详细文档)
 
 ## 单点登录
 
