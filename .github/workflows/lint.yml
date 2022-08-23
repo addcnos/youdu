@@ -1,0 +1,25 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  GOPROXY: "https://proxy.golang.org"
+
+jobs:
+  lint:
+    name: lint module
+    strategy:
+      matrix:
+        go-version: [ 1.16.x, 1.17.x, 1.18.x ]
+        platform: [ ubuntu-latest ]
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Lint
+        uses: golangci/golangci-lint-action@v3
