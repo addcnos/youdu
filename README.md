@@ -61,12 +61,12 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
 3. [会话管理](docs/EnterpriseApplication/enterpriseMessage.md)
 4. [会话消息](docs/EnterpriseApplication/enterpriseMessage.md)
       - [发送消息](docs/EnterpriseApplication/enterpriseMessage.md)
-5. [企业通讯录](docs/paragraph.md)
-      - [部门管理](docs/EnterpriseApplication/enterpriseMessage.md)
-      - [用户管理](docs/EnterpriseApplication/enterpriseMessage.md)
-      - [第三方认证](docs/EnterpriseApplication/enterpriseMessage.md)
-      - [群管理](docs/EnterpriseApplication/enterpriseMessage.md)
-6. [素材管理](docs/number.md)
+5. [企业通讯录](docs/EnterpriseContacts/README.md)
+      - [部门管理](docs/EnterpriseContacts/departments.md)
+      - [用户管理](docs/EnterpriseContacts/users.md)
+      - [第三方认证](docs/EnterpriseContacts/thirdAuth.md)
+      - [群管理](docs/EnterpriseContacts/groups.md)
+6. [素材管理](docs/media/README.md)
 ## 生成器
 
 想要使用生成器的话，请看 [generator-standard-readme](https://github.com/RichardLitt/generator-standard-readme)。
