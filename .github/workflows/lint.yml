@@ -13,18 +13,11 @@ permissions:
 
 jobs:
   lint:
-    name: lint module
-    strategy:
-      matrix:
-        go-version: [ 1.17.x, 1.18.x, 1.19.x ]
-        platform: [ ubuntu-latest, macos-latest ]
-    runs-on: ${{ matrix.platform }}
+    name: lint
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-go@v3
-        with:
-          go-version: ${{ matrix.go-version }}
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v2
       - name: golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v2
         with:
-          version: v1.29
+          version: latest
