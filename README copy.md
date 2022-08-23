@@ -11,6 +11,7 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
   - [安装](#安装)
   - [使用说明](#使用说明)
   - [详细文档](#详细文档)
+  - [生成器](#生成器)
   - [如何贡献](#如何贡献)
   - [License](#license)
 
@@ -66,12 +67,18 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
       - [第三方认证](docs/EnterpriseApplication/enterpriseMessage.md)
       - [群管理](docs/EnterpriseApplication/enterpriseMessage.md)
 6. [素材管理](docs/number.md)
+## 生成器
+
+想要使用生成器的话，请看 [generator-standard-readme](https://github.com/RichardLitt/generator-standard-readme)。
+有一个全局的可执行文件来运行包里的生成器，生成器的别名叫 `standard-readme`。
+
 ## 如何贡献
 
-非常欢迎你的加入！[提一个 Issue](https://github.com/addcnos/youdu/issues/new) 或者提交一个 Pull Request。
+非常欢迎你的加入！[提一个 Issue](https://github.com/RichardLitt/standard-readme/issues/new) 或者提交一个 Pull Request。
 
 
 标准 Readme 遵循 [Contributor Covenant](http://contributor-covenant.org/version/1/3/0/) 行为规范。
 
 ##  License
+
 [MIT](LICENSE) © Richard Littauer
