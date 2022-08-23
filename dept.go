@@ -64,37 +64,3 @@ func (d *Dept) GetList(depId int) ([]DeptItem, error) {
 
 	return v["deptList"], nil
 }
-
-func (d *Dept) GetId(alias string) {
-	// accessToken, err := d.config.GetAccessTokenProvider().GetAccessToken()
-	// if err != nil {
-	// 	return nil, err
-	// }
-	//
-	// resp, err := d.config.GetHttp().Get(deptGetIdUrl, map[string]string{
-	// 	"alias":       alias,
-	// 	"accessToken": accessToken,
-	// })
-	//
-	// if err != nil {
-	// 	return nil, err
-	// }
-	//
-	// if !resp.IsSuccess() {
-	// 	return nil, errors.New("Response status code is " + strconv.Itoa(resp.StatusCode()))
-	// }
-	//
-	// jsonRet, err := resp.Json()
-	// if err != nil {
-	// 	return nil, err
-	// }
-	//
-	// decrypt, err := d.config.GetEncryptor().Decrypt(jsonRet["encrypt"].(string))
-	// if err != nil {
-	// 	return nil, err
-	// }
-	//
-	// fmt.Println(decrypt)
-	//
-	// return nil, nil
-}

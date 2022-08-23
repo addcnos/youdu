@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/go-addcnos/youdu/message"
+	"github.com/addcnos/youdu/message"
 )
 
 const (
