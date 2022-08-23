@@ -7,9 +7,6 @@ import (
 
 type Response struct {
 	restyResponse *resty.Response
-	encryptor     *encryptor
-
-	decryptResult *DecryptResult
 }
 
 func NewResponse(restyResponse *resty.Response) *Response {

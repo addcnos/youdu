@@ -13,8 +13,6 @@ import (
 )
 
 type DecryptResult struct {
-	encryptor *encryptor
-
 	AppId  string
 	Data   string
 	Length int32
