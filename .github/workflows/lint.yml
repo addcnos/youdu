@@ -8,9 +8,6 @@ on:
     branches:
       - main
 
-env:
-  GOPROXY: "https://proxy.golang.org"
-
 jobs:
   lint:
     name: lint module
