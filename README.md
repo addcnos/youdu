@@ -1,8 +1,9 @@
 # Youdu SDK
 
-[![standard-readme compliant](https://img.shields.io/badge/readme%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/RichardLitt/standard-readme)
+[![MIT license](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/doc/api/c01_00002.html) 服务端 Api 的 Golang 实现。
+
 
 ## 内容列表
 - [Youdu SDK](#youdu-sdk)
@@ -11,6 +12,7 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
   - [安装](#安装)
   - [使用说明](#使用说明)
   - [详细文档](#详细文档)
+  - [Todo](#todo)
   - [如何贡献](#如何贡献)
   - [License](#license)
 
@@ -66,6 +68,9 @@ Youdu SDK 是一个 Go 包，它提供了[有度即时通讯](https://youdu.im/d
       - [第三方认证](docs/EnterpriseContacts/thirdAuth.md)
       - [群管理](docs/EnterpriseContacts/groups.md)
 6. [素材管理](docs/Media/README.md)
+   
+## Todo
+[查看详情](./todo.md)
 ## 如何贡献
 
 非常欢迎你的加入！[提一个 Issue](https://github.com/addcnos/youdu/issues/new) 或者提交一个 Pull Request。
