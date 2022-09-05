@@ -1,0 +1,22 @@
+[查看所有](../README.md)
+
+## 企业通讯录
+
+1. [部门管理](departments.md)
+	- [获取部门列表](departments.md#获取部门列表)
+2. [用户管理](users.md)
+	- [获取用户信息](users.md#获取用户信息)
+	- [获取部门用户详细信息](users.md#获取部门用户详细信息)
+	- [获取部门用户](users.md#获取部门用户)
+	- [查询用户激活状态](users.md#查询用户激活状态)
+3. [第三方认证](thirdAuth.md)
+	- [设置认证信息](thirdAuth.md#设置认证信息)
+4. [群管理](groups.md)
+	- [创建群](groups.md#创建群)
+	- [删除群](groups.md#删除群)
+	- [修改群名称](groups.md#修改群名称)
+	- [查看群信息](groups.md#查看群信息)
+	- [群列表](groups.md#群列表)
+	- [添加群成员](groups.md#添加群成员)
+	- [删除群成员](groups.md#删除群成员)
+	- [查询用户是否为群成员](groups.md#查询用户是否为群成员)
