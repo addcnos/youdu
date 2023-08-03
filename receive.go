@@ -37,7 +37,7 @@ func NewReceive(config *Config) *Receive {
 	}
 }
 
-func (s *Receive) DecryptReceive(request ReceiveRequest) (message ReceiveMessage, err error) {
+func (s *Receive) Decrypt(request ReceiveRequest) (message ReceiveMessage, err error) {
 	if request.Encrypt == "" {
 		err = ErrReceiveEmptyEncrypt
 		return
