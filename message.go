@@ -1,149 +1,70 @@
 package youdu
 
-import (
-	"encoding/json"
-	"errors"
-	"strconv"
+import "context"
 
-	"github.com/addcnos/youdu/message"
-)
+type MsgType string
 
 const (
-	msgSendUrl   = "/cgi/msg/send"
-	popWindowUrl = "/cgi/popwindow"
+	MsgTypeText   MsgType = "text"
+	MsgTypeImage  MsgType = "image"
+	MsgTypeFile   MsgType = "file"
+	MsgTypeMpNews MsgType = "mpnews"
+	MsgTypeLink   MsgType = "link"
+	MsgTypeExLink MsgType = "exlink"
 )
 
-type Message struct {
-	config *Config
+type MessageText struct {
+	Content string `json:"content"`
 }
 
-func NewMessage(config *Config) *Message {
-	return &Message{
-		config: config,
-	}
+type MessageMedia struct {
+	MediaId string `json:"media_id"`
 }
 
-func (m *Message) Send(msg message.Message) error {
-	accessToken, err := m.config.GetAccessTokenProvider().GetAccessToken()
-	if err != nil {
-		return err
-	}
-
-	msgJson, err := json.Marshal(msg)
-	if err != nil {
-		return err
-	}
-
-	encrypt, err := m.config.GetEncryptor().Encrypt(string(msgJson))
-	if err != nil {
-		return err
-	}
-
-	resp, err := m.config.GetHttp().Post(msgSendUrl+"?accessToken="+accessToken, map[string]interface{}{
-		"appId":   m.config.AppId,
-		"buin":    m.config.Buin,
-		"encrypt": encrypt,
-	})
-	if err != nil {
-		return err
-	}
-
-	if !resp.IsSuccess() {
-		return errors.New("Response status code is " + strconv.Itoa(resp.StatusCode()))
-	}
-
-	jsonRet, err := resp.Json()
-	if err != nil {
-		return err
-	}
-
-	if jsonRet["errcode"].(float64) != 0 {
-		return errors.New(jsonRet["errmsg"].(string))
-	}
-
-	return nil
+type MessageMpNews struct {
+	Title     string `json:"title"`
+	MediaId   string `json:"media_id"`
+	Content   string `json:"content"`
+	Digest    string `json:"digest,omitempty"`
+	ShowFront int    `json:"showFront,omitempty"`
 }
 
-func (m *Message) SendText(toUser, content string, toDept ...string) error {
-	if len(toDept) == 0 {
-		toDept = []string{""}
-	}
-
-	return m.Send(&message.TextMessage{
-		ToUser:  toUser,
-		ToDept:  toDept[0],
-		MsgType: message.MsgTypeText,
-		Text: &message.TextItem{
-			Content: content,
-		},
-	})
+type MessageLink struct {
+	Title  string `json:"title"`
+	Url    string `json:"url"`
+	Action int    `json:"action,omitempty"`
 }
 
-func (m *Message) SendImage(toUser, mediaId string, toDept ...string) error {
-	if len(toDept) == 0 {
-		toDept = []string{""}
-	}
-
-	return m.Send(&message.ImageMessage{
-		ToUser:  toUser,
-		ToDept:  toDept[0],
-		MsgType: message.MsgTypeImage,
-		Image: &message.MediaItem{
-			MediaId: mediaId,
-		},
-	})
+type MessageExLink struct {
+	Title   string `json:"title"`
+	Url     string `json:"url"`
+	MediaId string `json:"media_id"`
+	Digest  string `json:"digest,omitempty"`
 }
 
-func (m *Message) SendFile(toUser, mediaId string, toDept ...string) error {
-	if len(toDept) == 0 {
-		toDept = []string{""}
-	}
-
-	return m.Send(&message.FileMessage{
-		ToUser:  toUser,
-		ToDept:  toDept[0],
-		MsgType: message.MsgTypeFile,
-		File: &message.MediaItem{
-			MediaId: mediaId,
-		},
-	})
+type MessageRequest struct {
+	ToUser  string          `json:"toUser"`
+	ToDept  string          `json:"toDept"`
+	MsgType MsgType         `json:"msgType"`
+	Text    MessageText     `json:"text,omitempty"`
+	Image   MessageMedia    `json:"image,omitempty"`
+	File    MessageMedia    `json:"file,omitempty"`
+	MpNews  []MessageMpNews `json:"mpnews,omitempty"`
+	Link    MessageLink     `json:"link,omitempty"`
+	ExLink  []MessageExLink `json:"exlink,omitempty"`
 }
 
-func (m *Message) Popwindow(msg message.Message) error {
-	if _, ok := msg.(*message.PopWindowMessage); !ok {
-		return errors.New("message must be PopWindowMessage")
-	}
+type MessageResponse struct {
+	ErrCode int    `json:"errcode"`
+	ErrMsg  string `json:"errmsg"`
+}
 
-	msgJson, err := json.Marshal(msg)
+func (c *Client) SendMessage(ctx context.Context, request MessageRequest) (response MessageResponse, err error) {
+	req, err := c.newRequest(ctx, "POST", "/cgi/msg/send", withRequestBody(request), withRequestAccessToken())
 	if err != nil {
-		return err
+		return
 	}
 
-	encrypt, err := m.config.GetEncryptor().Encrypt(string(msgJson))
-	if err != nil {
-		return err
-	}
-
-	resp, err := m.config.GetHttp().Post(popWindowUrl, map[string]interface{}{
-		"app_id":      m.config.AppId,
-		"msg_encrypt": encrypt,
-	})
-	if err != nil {
-		return err
-	}
-
-	if !resp.IsSuccess() {
-		return errors.New("Response status code is " + strconv.Itoa(resp.StatusCode()))
-	}
-
-	jsonRet, err := resp.Json()
-	if err != nil {
-		return err
-	}
-
-	if jsonRet["errcode"].(float64) != 0 {
-		return errors.New(jsonRet["errmsg"].(string))
-	}
-
-	return nil
+	err = c.sendRequest(req, &response)
+	return
 }

@@ -15,3 +15,5 @@
 vendor/
 .idea
 youdu_test.go
+client_test.go
+_backup/
