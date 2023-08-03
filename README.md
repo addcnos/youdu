@@ -3,7 +3,7 @@
     <p>Youdu Go SDK</p>
     <p>
         <a target="_blank" href="https://github.com/addcnos/youdu/actions/workflows/lint.yml"><img src="https://github.com/addcnos/youdu/actions/workflows/lint.yml/badge.svg" alt="Lint"></a>
-        <a target="_blank" href="https://pkg.go.dev/github.com/addcnos/youdu"><img src="https://pkg.go.dev/badge/github.com/addcnos/youdu" alt="GoDoc"></a>
+        <a target="_blank" href="https://pkg.go.dev/github.com/addcnos/youdu/v2"><img src="https://pkg.go.dev/badge/github.com/addcnos/youdu/v2" alt="GoDoc"></a>
         <a target="_blank" href="https://goreportcard.com/report/github.com/addcnos/youdu"><img src="https://goreportcard.com/badge/github.com/addcnos/youdu" alt="Go Report Card"></a>
         <img src="https://img.shields.io/badge/Language-Golang-blue.svg" alt="Language">
         <a target="_blank" href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT license"></a>
@@ -16,14 +16,10 @@
 
 [Features](./feature.md)
 
-### Prerequisites
-
-- Golang Version >= 1.16
-
 ### Installation
 
 ```bash
-go get github.com/addcnos/youdu
+go get github.com/addcnos/youdu/v2
 ```
    
 ### Usage
@@ -34,27 +30,32 @@ Please refer to the [Documentation](./docs)
 package main
 
 import (
-	"github.com/addcnos/youdu"
-	"github.com/addcnos/youdu/message"
+	"context"
+	"fmt"
+
+	"github.com/addcnos/youdu/v2"
 )
 
-func main()  {
-
-	yd := youdu.New(&youdu.Config{
-		Api:    "http://domain.com/api", // youdu api host
-		Buin:   1111111, // 企业 buin 码
-		AppId:  "22222222222222", // 应用 appId
-		AesKey: "3444444444444444444444444444444444", // 应用 AesKey
+func main() {
+	client := youdu.NewClient(&youdu.Config{
+		Addr:   "http://examaple",
+		Buin:   111222333,
+		AppId:  "111222333",
+		AesKey: "111333445",
 	})
 
-	yd.Message().Send(&message.TextMessage{
-		ToUser:  "user1|user2", // 指定用户
-		ToDept:  "dep1|dep2",   // 指定部门
-		MsgType: message.MsgTypeText,
-		Text: &message.TextItem{
-			Content: "content",
+	resp, err := client.SendTextMessage(context.Background(), youdu.TextMessageRequest{
+		ToUser:  "11111",
+		MsgType: youdu.MsgTypeText,
+		Text: youdu.MessageText{
+			Content: "hello",
 		},
 	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(resp)
 }
 ```
 
@@ -66,4 +67,4 @@ Very welcome to join us! Raise an [Issue](https://github.com/addcnos/youdu/issue
 
 ## License
 
-[MIT License](LICENSE) © 2022 addcnos
+[MIT License](LICENSE) © 2022-2023 addcnos
