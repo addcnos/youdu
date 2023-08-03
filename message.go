@@ -5,27 +5,6 @@ import (
 	"net/http"
 )
 
-type MessageMpNews struct {
-	Title     string `json:"title"`
-	MediaId   string `json:"media_id"`
-	Content   string `json:"content"`
-	Digest    string `json:"digest,omitempty"`
-	ShowFront int    `json:"showFront,omitempty"`
-}
-
-type MessageLink struct {
-	Title  string `json:"title"`
-	Url    string `json:"url"`
-	Action int    `json:"action,omitempty"`
-}
-
-type MessageExLink struct {
-	Title   string `json:"title"`
-	Url     string `json:"url"`
-	MediaId string `json:"media_id"`
-	Digest  string `json:"digest,omitempty"`
-}
-
 type InterfaceMessageRequest interface{}
 
 var (
@@ -36,18 +15,26 @@ var (
 	_ InterfaceMessageRequest = MpNewsMessageRequest{}
 	_ InterfaceMessageRequest = LinkMessageRequest{}
 	_ InterfaceMessageRequest = ExLinkMessageRequest{}
+	_ InterfaceMessageRequest = MessageSysMessageRequest{}
 )
 
 type MessageRequest struct {
-	ToUser  string          `json:"toUser"`
-	ToDept  string          `json:"toDept"`
-	MsgType MsgType         `json:"msgType"`
-	Text    MessageText     `json:"text,omitempty"`
-	Image   MessageMedia    `json:"image,omitempty"`
-	File    MessageMedia    `json:"file,omitempty"`
-	MpNews  []MessageMpNews `json:"mpnews,omitempty"`
-	Link    MessageLink     `json:"link,omitempty"`
-	ExLink  []MessageExLink `json:"exlink,omitempty"`
+	// General
+	ToUser  string  `json:"toUser"`
+	ToDept  string  `json:"toDept"`
+	MsgType MsgType `json:"msgType"`
+
+	// Text, Image, File, MpNews, Link, ExLink
+	Text   MessageText     `json:"text,omitempty"`
+	Image  MessageMedia    `json:"image,omitempty"`
+	File   MessageMedia    `json:"file,omitempty"`
+	MpNews []MessageMpNews `json:"mpnews,omitempty"`
+	Link   MessageLink     `json:"link,omitempty"`
+	ExLink []MessageExLink `json:"exlink,omitempty"`
+
+	// SysMsg
+	ToAll  MessageSysMessageToAll  `json:"toAll,omitempty"`
+	SysMsg MessageSysMessageSysMsg `json:"sysMsg"`
 }
 
 type TextMessageRequest struct {
@@ -92,9 +79,12 @@ type ExLinkMessageRequest struct {
 	ExLink  []MessageExLink `json:"exlink"`
 }
 
-type MessageResponse struct {
-	ErrCode int    `json:"errcode"`
-	ErrMsg  string `json:"errmsg"`
+type MessageSysMessageRequest struct {
+	ToUser  string                  `json:"toUser,omitempty"`
+	ToDept  string                  `json:"toDept,omitempty"`
+	ToAll   MessageSysMessageToAll  `json:"toAll,omitempty"`
+	MsgType MsgType                 `json:"msgType"`
+	SysMsg  MessageSysMessageSysMsg `json:"sysMsg"`
 }
 
 func (c *Client) SendMessage(ctx context.Context, request InterfaceMessageRequest) (response Response, err error) {
@@ -135,5 +125,10 @@ func (c *Client) SendLinkMessage(ctx context.Context, request LinkMessageRequest
 
 func (c *Client) SendExLinkMessage(ctx context.Context, request ExLinkMessageRequest) (response Response, err error) {
 	request.MsgType = MsgTypeExLink
+	return c.SendMessage(ctx, request)
+}
+
+func (c *Client) SendSysMessage(ctx context.Context, request MessageSysMessageRequest) (response Response, err error) {
+	request.MsgType = MsgTypeSysMsg
 	return c.SendMessage(ctx, request)
 }

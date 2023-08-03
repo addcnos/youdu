@@ -11,7 +11,7 @@
 - [x] 图文消息 `message.go@SendMpNewsMessage`
 - [x] 隐式链接 `message.go@SendLinkMessage`
 - [x] 外链消息 `message.go@SendExLinkMessage`
-- [ ] 系统消息
+- [x] 系统消息 `message.go@SendSysMessage`
 - [ ] 短信消息
 - [ ] 邮件消息
 
