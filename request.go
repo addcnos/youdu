@@ -2,8 +2,10 @@ package youdu
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
+	"net/http"
 	"net/url"
 )
 
@@ -11,12 +13,6 @@ type Request struct {
 	Buin    int    `json:"buin"`
 	AppId   string `json:"appId"`
 	Encrypt string `json:"encrypt"`
-}
-
-type Response struct {
-	ErrCode int    `json:"errcode"`
-	ErrMsg  string `json:"errmsg"`
-	Encrypt string `json:"encrypt,omitempty"`
 }
 
 type requestOptions struct {
@@ -88,24 +84,64 @@ func withRequestAccessToken() requestOption {
 	}
 }
 
-type responseOptions struct {
-	needDecrypt bool
-}
+func (c *Client) newRequest(ctx context.Context, method string, path string, opts ...requestOption) (req *http.Request, err error) {
+	var (
+		opt = newRequestOptions(opts...)
+		url = c.config.Addr + path
+	)
 
-type responseOption func(*responseOptions)
-
-func newResponseOptions(opts ...responseOption) *responseOptions {
-	args := &responseOptions{}
-
-	for _, opt := range opts {
-		opt(args)
+	// body
+	bodyReader, err := c.encodeRequestBody(opt)
+	if err != nil {
+		return nil, err
 	}
 
-	return args
+	// access_token
+	if opt.needAccessToken {
+		if token, err := c.GetToken(ctx); err != nil {
+			return nil, err
+		} else {
+			opt.params.Add("accessToken", token)
+		}
+	}
+
+	req, err = http.NewRequestWithContext(ctx, method, url+"?"+opt.params.Encode(), bodyReader)
+	return
 }
 
-func withResponseDecrypt() responseOption {
-	return func(args *responseOptions) {
-		args.needDecrypt = true
+func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
+	if opt.body == nil {
+		return nil, nil
 	}
+
+	if !opt.needEncrypt {
+		return opt.bodyReader(opt.body)
+	}
+
+	reqBytes, err := json.Marshal(opt.body)
+	if err != nil {
+		return nil, err
+	}
+
+	cipherText, err := c.encryptor.Encrypt(reqBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return opt.bodyReader(Request{
+		Buin:    c.config.Buin,
+		AppId:   c.config.AppId,
+		Encrypt: cipherText,
+	})
+
+}
+
+func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...responseOption) error {
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return err
+	}
+	defer res.Body.Close()
+
+	return c.decodeResponse(res.Body, resp, opts...)
 }
