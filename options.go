@@ -70,7 +70,7 @@ func withRequestEncrypt() requestOption {
 	}
 }
 
-func withRequestParams(params url.Values) requestOption {
+func withRequestParams(params url.Values) requestOption { //nolint:unused
 	return func(args *requestOptions) {
 		args.params = params
 	}
