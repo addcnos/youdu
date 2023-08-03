@@ -1,6 +1,9 @@
 package youdu
 
-import "context"
+import (
+	"context"
+	"net/http"
+)
 
 type MsgType string
 
@@ -114,7 +117,7 @@ type MessageResponse struct {
 }
 
 func (c *Client) SendMessage(ctx context.Context, request InterfaceMessageRequest) (response Response, err error) {
-	req, err := c.newRequest(ctx, "POST", "/cgi/msg/send",
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/msg/send",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
 		return

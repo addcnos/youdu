@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"net/url"
 )
 
 type Request struct {
@@ -19,9 +20,23 @@ type Response struct {
 }
 
 type requestOptions struct {
+	params          url.Values
 	body            interface{}
 	needEncrypt     bool
 	needAccessToken bool
+}
+
+func newRequestOptions(opts ...requestOption) *requestOptions {
+	args := &requestOptions{
+		body:   nil,
+		params: url.Values{},
+	}
+
+	for _, opt := range opts {
+		opt(args)
+	}
+
+	return args
 }
 
 func (r *requestOptions) bodyReader(body interface{}) (io.Reader, error) {
@@ -43,18 +58,6 @@ func (r *requestOptions) bodyReader(body interface{}) (io.Reader, error) {
 
 type requestOption func(*requestOptions)
 
-func newRequestOptions(opts ...requestOption) *requestOptions {
-	args := &requestOptions{
-		body: nil,
-	}
-
-	for _, opt := range opts {
-		opt(args)
-	}
-
-	return args
-}
-
 func withRequestBody(body interface{}) requestOption {
 	return func(args *requestOptions) {
 		args.body = body
@@ -64,6 +67,18 @@ func withRequestBody(body interface{}) requestOption {
 func withRequestEncrypt() requestOption {
 	return func(args *requestOptions) {
 		args.needEncrypt = true
+	}
+}
+
+func withRequestParams(params url.Values) requestOption {
+	return func(args *requestOptions) {
+		args.params = params
+	}
+}
+
+func withRequestParamsKV(key, value string) requestOption {
+	return func(args *requestOptions) {
+		args.params.Add(key, value)
 	}
 }
 

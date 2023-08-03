@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 type Config struct {
@@ -28,7 +30,10 @@ func NewClient(config *Config) *Client {
 }
 
 func (c *Client) newRequest(ctx context.Context, method string, path string, opts ...requestOption) (req *http.Request, err error) {
-	opt := newRequestOptions(opts...)
+	var (
+		opt = newRequestOptions(opts...)
+		url = c.config.Addr + path
+	)
 
 	// body
 	bodyReader, err := c.encodeRequestBody(opt)
@@ -36,17 +41,16 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, opt
 		return nil, err
 	}
 
-	//  access_token
-	url := c.config.Addr + path
+	// access_token
 	if opt.needAccessToken {
 		if token, err := c.GetToken(ctx); err != nil {
 			return nil, err
 		} else {
-			url += "?accessToken=" + token
+			opt.params.Add("accessToken", token)
 		}
 	}
 
-	req, err = http.NewRequestWithContext(ctx, method, url, bodyReader)
+	req, err = http.NewRequestWithContext(ctx, method, url+"?"+opt.params.Encode(), bodyReader)
 	return
 }
 
@@ -90,6 +94,8 @@ func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...respon
 func (c *Client) decodeResponse(body io.Reader, resp interface{}, opts ...responseOption) error {
 	opt := newResponseOptions(opts...)
 
+	spew.Dump(body)
+
 	if !opt.needDecrypt {
 		return json.NewDecoder(body).Decode(resp)
 	}
@@ -115,9 +121,7 @@ func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp interface{}, opt
 		return err
 	}
 
-	if rawData.AppId != c.config.AppId {
-		return newError(-1, "app_id not match")
-	}
+	spew.Dump(rawData)
 
 	if rawData.Data == nil {
 		return newError(-1, "data is nil")
