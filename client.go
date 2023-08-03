@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 type Config struct {
@@ -94,8 +92,6 @@ func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...respon
 func (c *Client) decodeResponse(body io.Reader, resp interface{}, opts ...responseOption) error {
 	opt := newResponseOptions(opts...)
 
-	spew.Dump(body)
-
 	if !opt.needDecrypt {
 		return json.NewDecoder(body).Decode(resp)
 	}
@@ -120,8 +116,6 @@ func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp interface{}, opt
 	if err != nil {
 		return err
 	}
-
-	spew.Dump(rawData)
 
 	if rawData.Data == nil {
 		return newError(-1, "data is nil")
