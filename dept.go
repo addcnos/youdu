@@ -7,7 +7,7 @@ import (
 )
 
 type DeptList struct {
-	ID       interface{} `json:"id"`
+	Id       interface{} `json:"id"`
 	Name     string      `json:"name"`
 	ParentId interface{} `json:"parentId"`
 	SortId   interface{} `json:"sortId"`

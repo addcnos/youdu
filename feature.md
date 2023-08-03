@@ -78,14 +78,14 @@
 
 ### 群管理
 
-- [ ] 创建群
-- [ ] 删除群
-- [ ] 修改群名称
-- [ ] 查看群信息
-- [ ] 群列表
-- [ ] 添加群成员
-- [ ] 删除群成员
-- [ ] 查询用户是否为群成员
+- [x] 创建群 `group.go@CreateGroup`
+- [x] 删除群 `group.go@DeleteGroup`
+- [x] 修改群名称 `group.go@UpdateGroup`
+- [x] 查看群信息 `group.go@GetGroupInfo`
+- [x] 群列表 `group.go@GetGroupList`
+- [x] 添加群成员 `group.go@AddGroupMember`
+- [x] 删除群成员 `group.go@DelGroupMember`
+- [x] 查询用户是否为群成员 `group.go@IsGroupMember`
 
 ### 全量覆盖
 
