@@ -4,12 +4,13 @@
 
 ### 发送应用消息
 
-- [x] 文本消息
-- [x] 图片消息
-- [x] 文件消息
-- [x] 图文消息
-- [x] 隐式链接
-- [x] 外链消息
+- [x] 通用消息 `message.go@SendMessage`
+- [x] 文本消息 `message.go@SendTextMessage`
+- [x] 图片消息 `message.go@SendImageMessage`
+- [x] 文件消息 `message.go@SendFileMessage`
+- [x] 图文消息 `message.go@SendMpNewsMessage`
+- [x] 隐式链接 `message.go@SendLinkMessage`
+- [x] 外链消息 `message.go@SendExLinkMessage`
 - [ ] 系统消息
 - [ ] 短信消息
 - [ ] 邮件消息
@@ -24,21 +25,21 @@
 
 ## 单点登录
 
-- [x] 单点登录
+- [x] 单点登录 `identity.go@Identify`
 
 ## 会话管理
 
-- [x] 创建会话
-- [x] 获取会话
-- [x] 修改会话
+- [x] 创建会话 `session.go@CreateSession`
+- [x] 获取会话 `session.go@GetSession`
+- [x] 修改会话 `session.go@UpdateSession`
 
 ## 会话消息
 
-- [x] 文本消息
-- [x] 图片消息
-- [x] 文件消息
-- [x] 语音消息
-- [x] 视频消息
+- [x] 文本消息 `session.go@SendSessionMessage`
+- [x] 图片消息 `session.go@SendSessionImageMessage`
+- [x] 文件消息 `session.go@SendSessionFileMessage`
+- [x] 语音消息 `session.go@SendSessionVoiceMessage`
+- [x] 视频消息 `session.go@SendSessionVideoMessage`
 
 ## 自定义菜单
 
@@ -52,7 +53,7 @@
 - [ ] 创建部门
 - [ ] 更新部门
 - [ ] 删除部门
-- [x] 获取部门列表
+- [x] 获取部门列表 `dept.go@GetDeptList`
 - [ ] 获取部门ID
 
 ### 用户管理
@@ -62,8 +63,8 @@
 - [ ] 更新用户部门职务信息
 - [ ] 删除用户
 - [ ] 批量删除用户
-- [x] 获取用户信息
-- [x] 获取部门用户详细信息
+- [x] 获取用户信息 `user.go@GetUser`
+- [x] 获取部门用户详细信息 `user.go@GetDeptUserList`
 - [ ] 获取部门用户
 - [ ] 设置用户头像
 - [ ] 获取用户头像
