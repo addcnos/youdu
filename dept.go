@@ -1,65 +1,39 @@
 package youdu
 
 import (
-	"errors"
+	"context"
+	"net/http"
 	"strconv"
 )
 
-const (
-	deptListUrl = "/cgi/dept/list"
-)
-
-type Dept struct {
-	config *Config
+type DeptList struct {
+	ID       interface{} `json:"id"`
+	Name     string      `json:"name"`
+	ParentId interface{} `json:"parentId"`
+	SortId   interface{} `json:"sortId"`
 }
 
-type DeptItem struct {
-	Id       int    `json:"id"`
-	Name     string `json:"name"`
-	ParentId int    `json:"parentId"`
-	SortId   int    `json:"sortId"`
+type DeptListResponse struct {
+	DeptList []DeptList `json:"deptList"`
 }
 
-func NewDept(config *Config) *Dept {
-	return &Dept{
-		config: config,
+func (c *Client) GetDeptList(ctx context.Context, id ...int) (response DeptListResponse, err error) {
+	opts := []requestOption{
+		withRequestAccessToken(),
+		withRequestEncrypt(),
 	}
-}
 
-// GetList 获取部门列表
-func (d *Dept) GetList(depId int) ([]DeptItem, error) {
-	accessToken, err := d.config.GetAccessTokenProvider().GetAccessToken()
+	if len(id) > 0 {
+		opts = append(opts, withRequestParamsKV("id", strconv.Itoa(id[0])))
+	} else {
+		opts = append(opts, withRequestParamsKV("id", "0"))
+	}
+
+	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/dept/list", opts...)
 	if err != nil {
-		return nil, err
+		return
 	}
 
-	resp, err := d.config.GetHttp().Get(deptListUrl, map[string]string{
-		"id":          strconv.Itoa(depId),
-		"accessToken": accessToken,
-	})
-
-	if err != nil {
-		return nil, err
-	}
-
-	if !resp.IsSuccess() {
-		return nil, errors.New("Response status code is " + strconv.Itoa(resp.StatusCode()))
-	}
-
-	jsonRet, err := resp.Json()
-	if err != nil {
-		return nil, err
-	}
-
-	decrypt, err := d.config.GetEncryptor().Decrypt(jsonRet["encrypt"].(string))
-	if err != nil {
-		return nil, err
-	}
-
-	var v map[string][]DeptItem
-	if err := decrypt.Unmarshal(&v); err != nil {
-		return nil, err
-	}
-
-	return v["deptList"], nil
+	err = c.sendRequest(req, &response, withResponseDecrypt())
+	return
 }
