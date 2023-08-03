@@ -69,7 +69,7 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 		return nil, err
 	}
 
-	return opt.bodyReader(request{
+	return opt.bodyReader(Request{
 		Buin:    c.config.Buin,
 		AppId:   c.config.AppId,
 		Encrypt: cipherText,
@@ -98,7 +98,7 @@ func (c *Client) decodeResponse(body io.Reader, resp interface{}, opts ...respon
 }
 
 func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp interface{}, opts ...responseOption) error {
-	var r response
+	var r Response
 	if err := json.NewDecoder(body).Decode(&r); err != nil {
 		return err
 	}

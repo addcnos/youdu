@@ -6,16 +6,16 @@ import (
 	"io"
 )
 
-type request struct {
+type Request struct {
 	Buin    int    `json:"buin"`
 	AppId   string `json:"appId"`
 	Encrypt string `json:"encrypt"`
 }
 
-type response struct {
+type Response struct {
 	ErrCode int    `json:"errcode"`
 	ErrMsg  string `json:"errmsg"`
-	Encrypt string `json:"encrypt"`
+	Encrypt string `json:"encrypt,omitempty"`
 }
 
 type requestOptions struct {
