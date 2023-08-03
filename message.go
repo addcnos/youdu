@@ -5,25 +5,6 @@ import (
 	"net/http"
 )
 
-type MsgType string
-
-const (
-	MsgTypeText   MsgType = "text"
-	MsgTypeImage  MsgType = "image"
-	MsgTypeFile   MsgType = "file"
-	MsgTypeMpNews MsgType = "mpnews"
-	MsgTypeLink   MsgType = "link"
-	MsgTypeExLink MsgType = "exlink"
-)
-
-type MessageText struct {
-	Content string `json:"content"`
-}
-
-type MessageMedia struct {
-	MediaId string `json:"media_id"`
-}
-
 type MessageMpNews struct {
 	Title     string `json:"title"`
 	MediaId   string `json:"media_id"`
