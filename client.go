@@ -27,11 +27,11 @@ func NewClient(config *Config) *Client {
 	}
 }
 
-func (c *Client) newRequest(ctx context.Context, method string, path string, opts ...requestOption) (*http.Request, error) {
+func (c *Client) newRequest(ctx context.Context, method string, path string, opts ...requestOption) (req *http.Request, err error) {
 	opt := newRequestOptions(opts...)
 
 	// body
-	bodyReader, err := opt.bodyReader()
+	bodyReader, err := c.encodeRequestBody(opt)
 	if err != nil {
 		return nil, err
 	}
@@ -42,11 +42,39 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, opt
 		if token, err := c.GetToken(ctx); err != nil {
 			return nil, err
 		} else {
-			url += "?access_token=" + token
+			url += "?accessToken=" + token
 		}
 	}
 
-	return http.NewRequestWithContext(ctx, method, url, bodyReader)
+	req, err = http.NewRequestWithContext(ctx, method, url, bodyReader)
+	return
+}
+
+func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
+	if opt.body == nil {
+		return nil, nil
+	}
+
+	if !opt.needEncrypt {
+		return opt.bodyReader(opt.body)
+	}
+
+	reqBytes, err := json.Marshal(opt.body)
+	if err != nil {
+		return nil, err
+	}
+
+	cipherText, err := c.encryptor.Encrypt(reqBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	return opt.bodyReader(request{
+		Buin:    c.config.Buin,
+		AppId:   c.config.AppId,
+		Encrypt: cipherText,
+	})
+
 }
 
 func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...responseOption) error {

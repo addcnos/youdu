@@ -6,21 +6,34 @@ import (
 	"io"
 )
 
+type request struct {
+	Buin    int    `json:"buin"`
+	AppId   string `json:"appId"`
+	Encrypt string `json:"encrypt"`
+}
+
+type response struct {
+	ErrCode int    `json:"errcode"`
+	ErrMsg  string `json:"errmsg"`
+	Encrypt string `json:"encrypt"`
+}
+
 type requestOptions struct {
 	body            interface{}
+	needEncrypt     bool
 	needAccessToken bool
 }
 
-func (r *requestOptions) bodyReader() (io.Reader, error) {
-	if r.body == nil {
+func (r *requestOptions) bodyReader(body interface{}) (io.Reader, error) {
+	if body == nil {
 		return nil, nil
 	}
 
-	if v, ok := r.body.(io.Reader); ok {
+	if v, ok := body.(io.Reader); ok {
 		return v, nil
 	}
 
-	reqBytes, err := json.Marshal(r.body)
+	reqBytes, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
@@ -45,6 +58,12 @@ func newRequestOptions(opts ...requestOption) *requestOptions {
 func withRequestBody(body interface{}) requestOption {
 	return func(args *requestOptions) {
 		args.body = body
+	}
+}
+
+func withRequestEncrypt() requestOption {
+	return func(args *requestOptions) {
+		args.needEncrypt = true
 	}
 }
 
@@ -74,10 +93,4 @@ func withResponseDecrypt() responseOption {
 	return func(args *responseOptions) {
 		args.needDecrypt = true
 	}
-}
-
-type response struct {
-	ErrCode int    `json:"errcode"`
-	ErrMsg  string `json:"errmsg"`
-	Encrypt string `json:"encrypt"`
 }

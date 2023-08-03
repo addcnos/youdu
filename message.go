@@ -60,7 +60,8 @@ type MessageResponse struct {
 }
 
 func (c *Client) SendMessage(ctx context.Context, request MessageRequest) (response MessageResponse, err error) {
-	req, err := c.newRequest(ctx, "POST", "/cgi/msg/send", withRequestBody(request), withRequestAccessToken())
+	req, err := c.newRequest(ctx, "POST", "/cgi/msg/send",
+		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
 		return
 	}
