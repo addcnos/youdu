@@ -27,12 +27,12 @@ type UserResponse struct {
 type UserList struct {
 	UserId     string       `json:"userId"`
 	Name       string       `json:"name"`
-	Gender     interface{}  `json:"gender"`
-	Mobile     string       `json:"mobile"`
-	Phone      string       `json:"phone"`
-	Email      string       `json:"email"`
+	Gender     int          `json:"gender"`
+	Mobile     string       `json:"mobile,omitempty"`
+	Phone      string       `json:"phone,omitempty"`
+	Email      string       `json:"email,omitempty"`
 	Dept       []int        `json:"dept"`
-	DeptDetail []DeptDetail `json:"deptDetail"`
+	DeptDetail []DeptDetail `json:"deptDetail,omitempty"`
 }
 
 type DeptUserListResponse struct {
@@ -55,6 +55,20 @@ func (c *Client) GetUser(ctx context.Context, userId string) (response UserRespo
 
 func (c *Client) GetDeptUserList(ctx context.Context, deptId int) (response DeptUserListResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/list",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestParamsKV("deptId", strconv.Itoa(deptId)),
+	)
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response, withResponseDecrypt())
+	return
+}
+
+func (c *Client) GetDeptUserSimpleList(ctx context.Context, deptId int) (response DeptUserListResponse, err error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/simplelist",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
 		withRequestParamsKV("deptId", strconv.Itoa(deptId)),
