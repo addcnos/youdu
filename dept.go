@@ -7,10 +7,10 @@ import (
 )
 
 type DeptList struct {
-	Id       interface{} `json:"id"`
-	Name     string      `json:"name"`
-	ParentId interface{} `json:"parentId"`
-	SortId   interface{} `json:"sortId"`
+	Id       int    `json:"id"`
+	Name     string `json:"name"`
+	ParentId int    `json:"parentId"`
+	SortId   int    `json:"sortId"`
 }
 
 type DeptListResponse struct {
