@@ -86,8 +86,8 @@ func withRequestAccessToken() requestOption {
 
 func (c *Client) newRequest(ctx context.Context, method string, path string, opts ...requestOption) (req *http.Request, err error) {
 	var (
-		opt = newRequestOptions(opts...)
-		url = c.config.Addr + path
+		opt     = newRequestOptions(opts...)
+		urlPath = c.config.Addr + path
 	)
 
 	// body
@@ -105,7 +105,7 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, opt
 		}
 	}
 
-	req, err = http.NewRequestWithContext(ctx, method, url+"?"+opt.params.Encode(), bodyReader)
+	req, err = http.NewRequestWithContext(ctx, method, urlPath+"?"+opt.params.Encode(), bodyReader)
 	return
 }
 
