@@ -50,7 +50,7 @@ type MessageExLink struct {
 }
 
 type MessageSysMessageToAll struct {
-	OnliyOnline interface{} `json:"onliyOnline"`
+	OnliyOnline bool `json:"onliyOnline"`
 }
 
 type MessageSysMessageSysMsgMsg struct {

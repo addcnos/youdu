@@ -24,20 +24,20 @@ type GroupUpdateMemberRequest struct {
 }
 
 type GroupInfoMember struct {
-	Account interface{} `json:"account"`
-	Name    interface{} `json:"name"`
-	Mobile  interface{} `json:"mobile"`
+	Account string `json:"account"`
+	Name    string `json:"name"`
+	Mobile  string `json:"mobile"`
 }
 
 type GroupInfoResponse struct {
-	Id      interface{}       `json:"id"`
-	Name    interface{}       `json:"name"`
+	Id      string            `json:"id"`
+	Name    string            `json:"name"`
 	Members []GroupInfoMember `json:"members"`
 }
 
 type GroupListItem struct {
-	Id   interface{} `json:"id"`
-	Name interface{} `json:"name"`
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 type GroupListResponse struct {
