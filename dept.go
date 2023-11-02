@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type DeptList struct {
+type DeptItem struct {
 	Id       int    `json:"id"`
 	Name     string `json:"name"`
 	ParentId int    `json:"parentId"`
@@ -14,7 +14,7 @@ type DeptList struct {
 }
 
 type DeptListResponse struct {
-	DeptList []DeptList `json:"deptList"`
+	DeptList []DeptItem `json:"deptList"`
 }
 
 type AliasList struct {

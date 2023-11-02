@@ -35,13 +35,13 @@ type GroupInfoResponse struct {
 	Members []GroupInfoMember `json:"members"`
 }
 
-type GroupListItem struct {
+type GroupItem struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type GroupListResponse struct {
-	GroupList []GroupListItem `json:"groupList"`
+	GroupList []GroupItem `json:"groupList"`
 }
 
 type IsGroupMemberResponse struct {
