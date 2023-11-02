@@ -24,7 +24,7 @@ type UserResponse struct {
 	DeptDetail []DeptDetail `json:"deptDetail"`
 }
 
-type UserList struct {
+type UserItem struct {
 	UserId     string       `json:"userId"`
 	Name       string       `json:"name"`
 	Gender     int          `json:"gender"`
@@ -36,7 +36,7 @@ type UserList struct {
 }
 
 type DeptUserListResponse struct {
-	UserList []UserList `json:"userList"`
+	UserList []UserItem `json:"userList"`
 }
 
 func (c *Client) GetUser(ctx context.Context, userId string) (response UserResponse, err error) {
