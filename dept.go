@@ -17,16 +17,16 @@ type DeptListResponse struct {
 	DeptList []DeptItem `json:"deptList"`
 }
 
-type AliasList struct {
+type DeptAliasItem struct {
 	Id    int    `json:"id"`
 	Alias string `json:"alias"`
 }
 
-type AliasListResponse struct {
-	AliasList []AliasList `json:"aliasList"`
+type DeptAliasListResponse struct {
+	AliasList []DeptAliasItem `json:"aliasList"`
 }
 
-type AliaIdResponse struct {
+type DeptIdByAliasResponse struct {
 	Id int `json:"id"`
 }
 
@@ -51,7 +51,7 @@ func (c *Client) GetDeptList(ctx context.Context, id ...int) (response DeptListR
 	return
 }
 
-func (c *Client) GetDeptAliasList(ctx context.Context) (response AliasListResponse, err error) {
+func (c *Client) GetDeptAliasList(ctx context.Context) (response DeptAliasListResponse, err error) {
 	opts := []requestOption{
 		withRequestAccessToken(),
 		withRequestEncrypt(),
@@ -66,7 +66,7 @@ func (c *Client) GetDeptAliasList(ctx context.Context) (response AliasListRespon
 	return
 }
 
-func (c *Client) GetDeptId(ctx context.Context, alias string) (response AliaIdResponse, err error) {
+func (c *Client) GetDeptIdByAlias(ctx context.Context, alias string) (response DeptIdByAliasResponse, err error) {
 	opts := []requestOption{
 		withRequestAccessToken(),
 		withRequestEncrypt(),
