@@ -51,7 +51,7 @@ func (c *Client) GetDeptList(ctx context.Context, id ...int) (response DeptListR
 	return
 }
 
-func (c *Client) GetDeptIdByAlias(ctx context.Context) (response AliasListResponse, err error) {
+func (c *Client) GetDeptAliasList(ctx context.Context) (response AliasListResponse, err error) {
 	opts := []requestOption{
 		withRequestAccessToken(),
 		withRequestEncrypt(),
