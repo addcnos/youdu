@@ -54,7 +54,7 @@
 - [ ] 更新部门
 - [ ] 删除部门
 - [x] 获取部门列表 `dept.go@GetDeptList`
-- [ ] 获取部门ID
+- [x] 获取部门ID `dept.go@GetDeptAliasList`  `dept.go@GetDeptId`
 
 ### 用户管理
 
