@@ -12,6 +12,7 @@ const (
 	MsgTypeVoice  MsgType = "voice"
 	MsgTypeVideo  MsgType = "video"
 	MsgTypeSysMsg MsgType = "sysMsg"
+	MsgTypePopMsg MsgType = "popMsg"
 )
 
 type MessageText struct {
@@ -62,4 +63,16 @@ type MessageSysMessageSysMsg struct {
 	Title       string                       `json:"title"`
 	PopDuration int                          `json:"popDuration,omitempty"`
 	Msg         []MessageSysMessageSysMsgMsg `json:"msg"`
+}
+
+type MessagePopWindow struct {
+	Title    string `json:"title"`
+	Url      string `json:"url,omitempty"`
+	Tip      string `json:"tip,omitempty"`
+	Width    int    `json:"width,omitempty"`
+	Height   int    `json:"height,omitempty"`
+	Duration int    `json:"duration,omitempty"`
+	Position int    `json:"position,omitempty"`
+	NoticeId string `json:"notice_id"`
+	PopMode  int    `json:"pop_mode,omitempty"`
 }

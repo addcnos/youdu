@@ -16,6 +16,7 @@ var (
 	_ InterfaceMessageRequest = LinkMessageRequest{}
 	_ InterfaceMessageRequest = ExLinkMessageRequest{}
 	_ InterfaceMessageRequest = MessageSysMessageRequest{}
+	_ InterfaceMessageRequest = PopWindowMessageRequest{}
 )
 
 type MessageRequest struct {
@@ -24,13 +25,14 @@ type MessageRequest struct {
 	ToDept  string  `json:"toDept"`
 	MsgType MsgType `json:"msgType"`
 
-	// Text, Image, File, MpNews, Link, ExLink
-	Text   MessageText     `json:"text,omitempty"`
-	Image  MessageMedia    `json:"image,omitempty"`
-	File   MessageMedia    `json:"file,omitempty"`
-	MpNews []MessageMpNews `json:"mpnews,omitempty"`
-	Link   MessageLink     `json:"link,omitempty"`
-	ExLink []MessageExLink `json:"exlink,omitempty"`
+	// Text, Image, File, MpNews, Link, ExLink, PopWindow
+	Text      MessageText      `json:"text,omitempty"`
+	Image     MessageMedia     `json:"image,omitempty"`
+	File      MessageMedia     `json:"file,omitempty"`
+	MpNews    []MessageMpNews  `json:"mpnews,omitempty"`
+	Link      MessageLink      `json:"link,omitempty"`
+	ExLink    []MessageExLink  `json:"exlink,omitempty"`
+	PopWindow MessagePopWindow `json:"popwindow,omitempty"`
 
 	// SysMsg
 	ToAll  MessageSysMessageToAll  `json:"toAll,omitempty"`
@@ -87,6 +89,13 @@ type MessageSysMessageRequest struct {
 	SysMsg  MessageSysMessageSysMsg `json:"sysMsg"`
 }
 
+type PopWindowMessageRequest struct {
+	ToUser    string           `json:"toUser,omitempty"`
+	ToDept    string           `json:"toDept,omitempty"`
+	MsgType   MsgType          `json:"msgType,omitempty"`
+	PopWindow MessagePopWindow `json:"popWindow"`
+}
+
 func (c *Client) SendMessage(ctx context.Context, request InterfaceMessageRequest) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/msg/send",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
@@ -131,4 +140,16 @@ func (c *Client) SendExLinkMessage(ctx context.Context, request ExLinkMessageReq
 func (c *Client) SendSysMessage(ctx context.Context, request MessageSysMessageRequest) (response Response, err error) {
 	request.MsgType = MsgTypeSysMsg
 	return c.SendMessage(ctx, request)
+}
+
+func (c *Client) SendPopWindowMessage(ctx context.Context, request PopWindowMessageRequest) (response Response, err error) {
+	request.MsgType = MsgTypePopMsg
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/popwindow",
+		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
 }
