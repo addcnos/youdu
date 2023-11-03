@@ -1,5 +1,7 @@
 package youdu
 
+import "net/http"
+
 type Config struct {
 	Addr   string
 	Buin   int
@@ -8,14 +10,43 @@ type Config struct {
 }
 
 type Client struct {
-	config    *Config
-	encryptor *Encryptor
-	token     *token
+	config *Config
+	token  *token
+
+	encryptor  *Encryptor
+	httpClient *http.Client
 }
 
-func NewClient(config *Config) *Client {
-	return &Client{
-		config:    config,
-		encryptor: NewEncryptorWithConfig(config),
+func WithEncryptor(encryptor *Encryptor) func(c *Client) {
+	return func(c *Client) {
+		c.encryptor = encryptor
 	}
+}
+
+func WithHttpClient(client *http.Client) func(c *Client) {
+	return func(c *Client) {
+		c.httpClient = client
+	}
+}
+
+type ClientOption func(c *Client)
+
+func NewClient(config *Config, opts ...ClientOption) *Client {
+	c := &Client{
+		config: config,
+	}
+
+	for _, opt := range opts {
+		opt(c)
+	}
+
+	if c.httpClient == nil {
+		c.httpClient = http.DefaultClient
+	}
+
+	if c.encryptor == nil {
+		c.encryptor = NewEncryptorWithConfig(config)
+	}
+
+	return c
 }

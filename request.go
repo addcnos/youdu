@@ -4,9 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
+)
+
+var (
+	ErrUnexpectedResponseCode = errors.New("youdu sdk: unexpected response code")
 )
 
 type Request struct {
@@ -137,11 +142,15 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 }
 
 func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...responseOption) error {
-	res, err := http.DefaultClient.Do(req)
+	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
 	}
 	defer res.Body.Close()
+
+	if res.StatusCode != http.StatusOK {
+		return ErrUnexpectedResponseCode
+	}
 
 	return c.decodeResponse(res.Body, resp, opts...)
 }
