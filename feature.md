@@ -69,8 +69,8 @@
 - [ ] 设置用户头像
 - [ ] 获取用户头像
 - [ ] 更新用户拓展属性字段
-- [ ] 查询用户激活状态
-- [ ] 修改用户激活状态
+- [x] 查询用户激活状态 `user.go@GetUserEnableState`
+- [x] 修改用户激活状态 `user.go@GetUserEnableStateUpdate`
 
 ### 第三方认证
 

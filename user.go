@@ -39,6 +39,15 @@ type DeptUserListResponse struct {
 	UserList []UserItem `json:"userList"`
 }
 
+type UserEnableStateResponse struct {
+	EnableState int `json:"enableState"`
+}
+
+type UpdateUserEnableStateRequest struct {
+	UserIdList  []string    `json:"userIdList"`
+	EnableState EnableState `json:"enableState"`
+}
+
 func (c *Client) GetUser(ctx context.Context, userId string) (response UserResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/get",
 		withRequestAccessToken(),
@@ -78,5 +87,34 @@ func (c *Client) GetDeptUserSimpleList(ctx context.Context, deptId int) (respons
 	}
 
 	err = c.sendRequest(req, &response, withResponseDecrypt())
+	return
+}
+
+func (c *Client) GetUserEnableState(ctx context.Context, userId string) (response UserEnableStateResponse, err error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/enable/state",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestParamsKV("userId", userId),
+	)
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response, withResponseDecrypt())
+	return
+}
+
+func (c *Client) UpdateUserEnableState(ctx context.Context, request UpdateUserEnableStateRequest) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/enable/stateupdate",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestBody(request),
+	)
+
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
 	return
 }
