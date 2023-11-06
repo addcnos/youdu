@@ -43,7 +43,7 @@ type UserEnableStateResponse struct {
 	EnableState int `json:"enableState"`
 }
 
-type UserEnableStateUpdateRequest struct {
+type UpdateUserEnableStateRequest struct {
 	UserIdList  []string    `json:"userIdList"`
 	EnableState EnableState `json:"enableState"`
 }
@@ -104,7 +104,7 @@ func (c *Client) GetUserEnableState(ctx context.Context, userId string) (respons
 	return
 }
 
-func (c *Client) UpdateUserEnableState(ctx context.Context, request UserEnableStateUpdateRequest) (response Response, err error) {
+func (c *Client) UpdateUserEnableState(ctx context.Context, request UpdateUserEnableStateRequest) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/enable/stateupdate",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
