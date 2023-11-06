@@ -30,6 +30,26 @@ type DeptIdByAliasResponse struct {
 	Id int `json:"id"`
 }
 
+type CreateDeptRequest struct {
+	Name     string `json:"name"`
+	Alias    string `json:"alias"`
+	Id       int    `json:"id"`
+	ParentId int    `json:"parentId"`
+	SortId   int    `json:"sortId"`
+}
+
+type CreateDeptResponse struct {
+	Id int `json:"id"`
+}
+
+type UpdateDeptRequest struct {
+	Name     string `json:"name"`
+	Alias    string `json:"alias"`
+	Id       int    `json:"id"`
+	ParentId int    `json:"parentId"`
+	SortId   int    `json:"sortId"`
+}
+
 func (c *Client) GetDeptList(ctx context.Context, id ...int) (response DeptListResponse, err error) {
 	opts := []requestOption{
 		withRequestAccessToken(),
@@ -79,5 +99,46 @@ func (c *Client) GetDeptIdByAlias(ctx context.Context, alias string) (response D
 	}
 
 	err = c.sendRequest(req, &response, withResponseDecrypt())
+	return
+}
+
+func (c *Client) CreateDept(ctx context.Context, request CreateDeptRequest) (response CreateDeptResponse, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/dept/create",
+		withRequestBody(request),
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+	)
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response, withResponseDecrypt())
+	return
+}
+
+func (c *Client) UpdateDept(ctx context.Context, request UpdateDeptRequest) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/dept/update",
+		withRequestBody(request),
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+	)
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
+}
+
+func (c *Client) DeleteDept(ctx context.Context, deptId int) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/dept/delete",
+		withRequestAccessToken(),
+		withRequestParamsKV("id", strconv.Itoa(deptId)),
+	)
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
 	return
 }
