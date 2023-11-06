@@ -50,11 +50,11 @@
 
 ### 部门管理
 
-- [ ] 创建部门
-- [ ] 更新部门
-- [ ] 删除部门
+- [x] 创建部门 `dept.go@CreateDept`
+- [x] 更新部门 `dept.go@UpdateDept`
+- [x] 删除部门 `dept.go@DeleteDept`
 - [x] 获取部门列表 `dept.go@GetDeptList`
-- [x] 获取部门ID `dept.go@GetDeptAliasList`  `dept.go@GetDeptId`
+- [x] 获取部门 ID `dept.go@GetDeptAliasList` `dept.go@GetDeptId`
 
 ### 用户管理
 
