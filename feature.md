@@ -21,7 +21,7 @@
 
 ### 发送弹窗消息
 
-- [ ] 发送弹窗消息
+- [x] 发送弹窗消息 `message.go@SendPopWindowMessage`
 
 ## 单点登录
 

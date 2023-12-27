@@ -87,6 +87,12 @@ type MessageSysMessageRequest struct {
 	SysMsg  MessageSysMessageSysMsg `json:"sysMsg"`
 }
 
+type PopWindowMessageRequest struct {
+	ToUser    string           `json:"toUser"`
+	ToDept    string           `json:"toDept"`
+	PopWindow MessagePopWindow `json:"popWindow"`
+}
+
 func (c *Client) SendMessage(ctx context.Context, request InterfaceMessageRequest) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/msg/send",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
@@ -131,4 +137,19 @@ func (c *Client) SendExLinkMessage(ctx context.Context, request ExLinkMessageReq
 func (c *Client) SendSysMessage(ctx context.Context, request MessageSysMessageRequest) (response Response, err error) {
 	request.MsgType = MsgTypeSysMsg
 	return c.SendMessage(ctx, request)
+}
+
+func (c *Client) SendPopWindowMessage(ctx context.Context, request PopWindowMessageRequest) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/popwindow",
+		withRequestBody(request),
+		withRequestEncrypt(),
+		withRequestType(SpecialRequestType),
+	)
+
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
 }

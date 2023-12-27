@@ -63,3 +63,15 @@ type MessageSysMessageSysMsg struct {
 	PopDuration int                          `json:"popDuration,omitempty"`
 	Msg         []MessageSysMessageSysMsgMsg `json:"msg"`
 }
+
+type MessagePopWindow struct {
+	Url      string `json:"url"`
+	Tip      string `json:"tip"`
+	Title    string `json:"title"`
+	Width    int    `json:"width"`
+	Height   int    `json:"height"`
+	Duration int    `json:"duration"`
+	Position int    `json:"position"`
+	NoticeId string `json:"notice_id"`
+	PopMode  int    `json:"pop_mode"`
+}
