@@ -14,23 +14,37 @@ var (
 	ErrUnexpectedResponseCode = errors.New("youdu sdk: unexpected response code")
 )
 
-type Request struct {
+type requestType string
+
+type NormalRequest struct {
 	Buin    int    `json:"buin"`
 	AppId   string `json:"appId"`
 	Encrypt string `json:"encrypt"`
 }
+
+type SpecialRequest struct {
+	AppId      string `json:"app_Id"`
+	MsgEncrypt string `json:"msg_encrypt"`
+}
+
+const (
+	NormalRequestType  requestType = "normal"
+	SpecialRequestType requestType = "special"
+)
 
 type requestOptions struct {
 	params          url.Values
 	body            interface{}
 	needEncrypt     bool
 	needAccessToken bool
+	requestType     requestType
 }
 
 func newRequestOptions(opts ...requestOption) *requestOptions {
 	args := &requestOptions{
-		body:   nil,
-		params: url.Values{},
+		body:        nil,
+		params:      url.Values{},
+		requestType: NormalRequestType,
 	}
 
 	for _, opt := range opts {
@@ -89,6 +103,12 @@ func withRequestAccessToken() requestOption {
 	}
 }
 
+func withRequestType(rt requestType) requestOption {
+	return func(args *requestOptions) {
+		args.requestType = rt
+	}
+}
+
 func (c *Client) newRequest(ctx context.Context, method string, path string, opts ...requestOption) (req *http.Request, err error) {
 	var (
 		opt     = newRequestOptions(opts...)
@@ -133,12 +153,21 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 		return nil, err
 	}
 
-	return opt.bodyReader(Request{
-		Buin:    c.config.Buin,
-		AppId:   c.config.AppId,
-		Encrypt: cipherText,
-	})
-
+	switch opt.requestType {
+	case SpecialRequestType:
+		return opt.bodyReader(SpecialRequest{
+			AppId:      c.config.AppId,
+			MsgEncrypt: cipherText,
+		})
+	case NormalRequestType:
+		return opt.bodyReader(NormalRequest{
+			Buin:    c.config.Buin,
+			AppId:   c.config.AppId,
+			Encrypt: cipherText,
+		})
+	default:
+		return nil, errors.New("youdu sdk: unknown request type")
+	}
 }
 
 func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...responseOption) error {
