@@ -58,11 +58,11 @@
 
 ### 用户管理
 
-- [ ] 创建用户
-- [ ] 更新用户
-- [ ] 更新用户部门职务信息
-- [ ] 删除用户
-- [ ] 批量删除用户
+- [x] 创建用户 `user.go@CreateUser`
+- [x] 更新用户 `user.go@UpdateUser`
+- [x] 更新用户部门职务信息 `user.go@UpdateUserPosition`
+- [x] 删除用户 `user.go@DeleteUser`
+- [x] 批量删除用户 `user.go@BatchDeleteUser`
 - [x] 获取用户信息 `user.go@GetUser`
 - [x] 获取部门用户详细信息 `user.go@GetDeptUserList`
 - [x] 获取部门用户 `user.go@GetDeptUserSimpleList`

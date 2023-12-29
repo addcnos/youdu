@@ -6,6 +6,41 @@ import (
 	"strconv"
 )
 
+type CreateUserRequest struct {
+	UserId      string      `json:"userId"`
+	Name        string      `json:"name"`
+	Gender      int         `json:"gender"`
+	Mobile      string      `json:"mobile"`
+	Phone       string      `json:"phone"`
+	Email       string      `json:"email"`
+	Dept        []int       `json:"dept"`
+	EnableState EnableState `json:"enableState"`
+	ShortCode   string      `json:"shortCode"`
+}
+
+type UpdateUserRequest struct {
+	UserId    string `json:"userId"`
+	Name      string `json:"name"`
+	Gender    int    `json:"gender"`
+	Mobile    string `json:"mobile"`
+	Phone     string `json:"phone"`
+	Email     string `json:"email"`
+	Dept      []int  `json:"dept"`
+	ShortCode string `json:"shortCode"`
+}
+
+type UpdateUserPositionRequest struct {
+	UserId   string `json:"userId"`
+	DeptId   int    `json:"deptId"`
+	Position string `json:"position"`
+	Weight   int    `json:"weight"`
+	SortId   int    `json:"sortId"`
+}
+
+type BatchDeleteUserRequest struct {
+	DelList []string `json:"delList"`
+}
+
 type DeptDetail struct {
 	DeptId   int    `json:"deptId"`
 	Position string `json:"position"`
@@ -46,6 +81,81 @@ type UserEnableStateResponse struct {
 type UpdateUserEnableStateRequest struct {
 	UserIdList  []string    `json:"userIdList"`
 	EnableState EnableState `json:"enableState"`
+}
+
+func (c *Client) CreateUser(ctx context.Context, request CreateUserRequest) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/create",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestBody(request),
+	)
+
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
+}
+
+func (c *Client) UpdateUser(ctx context.Context, request UpdateUserRequest) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/update",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestBody(request),
+	)
+
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
+}
+
+func (c *Client) UpdateUserPosition(ctx context.Context, request UpdateUserPositionRequest) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/positionupdate",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestBody(request),
+	)
+
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
+}
+
+func (c *Client) DeleteUser(ctx context.Context, userId string) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/delete",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestParamsKV("userId", userId),
+	)
+
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
+}
+
+func (c *Client) BatchDeleteUser(ctx context.Context, request BatchDeleteUserRequest) (response Response, err error) {
+	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/batchdelete",
+		withRequestAccessToken(),
+		withRequestEncrypt(),
+		withRequestBody(request),
+	)
+
+	if err != nil {
+		return
+	}
+
+	err = c.sendRequest(req, &response)
+	return
 }
 
 func (c *Client) GetUser(ctx context.Context, userId string) (response UserResponse, err error) {
