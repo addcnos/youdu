@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-type UserCreateRequest struct {
+type CreateUserRequest struct {
 	UserId      string      `json:"userId"`
 	Name        string      `json:"name"`
 	Gender      int         `json:"gender"`
@@ -18,7 +18,7 @@ type UserCreateRequest struct {
 	ShortCode   string      `json:"shortCode"`
 }
 
-type UserUpdateRequest struct {
+type UpdateUserRequest struct {
 	UserId    string `json:"userId"`
 	Name      string `json:"name"`
 	Gender    int    `json:"gender"`
@@ -29,7 +29,7 @@ type UserUpdateRequest struct {
 	ShortCode string `json:"shortCode"`
 }
 
-type UserPositionUpdateRequest struct {
+type UpdateUserPositionRequest struct {
 	UserId   string `json:"userId"`
 	DeptId   int    `json:"deptId"`
 	Position string `json:"position"`
@@ -37,7 +37,7 @@ type UserPositionUpdateRequest struct {
 	SortId   int    `json:"sortId"`
 }
 
-type UserBatchDeleteRequest struct {
+type BatchDeleteUserRequest struct {
 	DelList []string `json:"delList"`
 }
 
@@ -83,7 +83,7 @@ type UpdateUserEnableStateRequest struct {
 	EnableState EnableState `json:"enableState"`
 }
 
-func (c *Client) UserCreate(ctx context.Context, request UserCreateRequest) (response Response, err error) {
+func (c *Client) CreateUser(ctx context.Context, request CreateUserRequest) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/create",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
@@ -98,7 +98,7 @@ func (c *Client) UserCreate(ctx context.Context, request UserCreateRequest) (res
 	return
 }
 
-func (c *Client) UserUpdate(ctx context.Context, request UserUpdateRequest) (response Response, err error) {
+func (c *Client) UpdateUser(ctx context.Context, request UpdateUserRequest) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/update",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
@@ -113,7 +113,7 @@ func (c *Client) UserUpdate(ctx context.Context, request UserUpdateRequest) (res
 	return
 }
 
-func (c *Client) UserPositionUpdate(ctx context.Context, request UserPositionUpdateRequest) (response Response, err error) {
+func (c *Client) UpdateUserPosition(ctx context.Context, request UpdateUserPositionRequest) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/positionupdate",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
@@ -128,7 +128,7 @@ func (c *Client) UserPositionUpdate(ctx context.Context, request UserPositionUpd
 	return
 }
 
-func (c *Client) UserDelete(ctx context.Context, userId string) (response Response, err error) {
+func (c *Client) DeleteUser(ctx context.Context, userId string) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/delete",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
@@ -143,7 +143,7 @@ func (c *Client) UserDelete(ctx context.Context, userId string) (response Respon
 	return
 }
 
-func (c *Client) UserBatchDelete(ctx context.Context, request UserBatchDeleteRequest) (response Response, err error) {
+func (c *Client) BatchDeleteUser(ctx context.Context, request BatchDeleteUserRequest) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/batchdelete",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
