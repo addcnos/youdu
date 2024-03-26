@@ -7,10 +7,10 @@ import (
 )
 
 type DeptItem struct {
-	Id       int    `json:"id"`
+	ID       int    `json:"id"`
 	Name     string `json:"name"`
-	ParentId int    `json:"parentId"`
-	SortId   int    `json:"sortId"`
+	ParentID int    `json:"parentId"`
+	SortID   int    `json:"sortId"`
 }
 
 type DeptListResponse struct {
@@ -18,7 +18,7 @@ type DeptListResponse struct {
 }
 
 type DeptAliasItem struct {
-	Id    int    `json:"id"`
+	ID    int    `json:"id"`
 	Alias string `json:"alias"`
 }
 
@@ -26,28 +26,28 @@ type DeptAliasListResponse struct {
 	AliasList []DeptAliasItem `json:"aliasList"`
 }
 
-type DeptIdByAliasResponse struct {
-	Id int `json:"id"`
+type DeptIDByAliasResponse struct {
+	ID int `json:"id"`
 }
 
 type CreateDeptRequest struct {
 	Name     string `json:"name"`
 	Alias    string `json:"alias"`
-	Id       int    `json:"id"`
-	ParentId int    `json:"parentId"`
-	SortId   int    `json:"sortId"`
+	ID       int    `json:"id"`
+	ParentID int    `json:"parentId"`
+	SortID   int    `json:"sortId"`
 }
 
 type CreateDeptResponse struct {
-	Id int `json:"id"`
+	ID int `json:"id"`
 }
 
 type UpdateDeptRequest struct {
 	Name     string `json:"name"`
 	Alias    string `json:"alias"`
-	Id       int    `json:"id"`
-	ParentId int    `json:"parentId"`
-	SortId   int    `json:"sortId"`
+	ID       int    `json:"id"`
+	ParentID int    `json:"parentId"`
+	SortID   int    `json:"sortId"`
 }
 
 func (c *Client) GetDeptList(ctx context.Context, id ...int) (response DeptListResponse, err error) {
@@ -86,7 +86,7 @@ func (c *Client) GetDeptAliasList(ctx context.Context) (response DeptAliasListRe
 	return
 }
 
-func (c *Client) GetDeptIdByAlias(ctx context.Context, alias string) (response DeptIdByAliasResponse, err error) {
+func (c *Client) GetDeptIDByAlias(ctx context.Context, alias string) (response DeptIDByAliasResponse, err error) {
 	opts := []requestOption{
 		withRequestAccessToken(),
 		withRequestEncrypt(),
@@ -130,10 +130,10 @@ func (c *Client) UpdateDept(ctx context.Context, request UpdateDeptRequest) (res
 	return
 }
 
-func (c *Client) DeleteDept(ctx context.Context, deptId int) (response Response, err error) {
+func (c *Client) DeleteDept(ctx context.Context, deptID int) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/dept/delete",
 		withRequestAccessToken(),
-		withRequestParamsKV("id", strconv.Itoa(deptId)),
+		withRequestParamsKV("id", strconv.Itoa(deptID)),
 	)
 	if err != nil {
 		return

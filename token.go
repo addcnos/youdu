@@ -23,7 +23,7 @@ func (c *Client) GetToken(ctx context.Context) (string, error) {
 
 	resp, err := c.getToken(ctx, tokenRequest{
 		Buin:    c.config.Buin,
-		AppId:   c.config.AppId,
+		AppID:   c.config.AppID,
 		Encrypt: ciphertext,
 	})
 	if err != nil {
@@ -40,7 +40,7 @@ func (c *Client) GetToken(ctx context.Context) (string, error) {
 
 type tokenRequest struct {
 	Buin    int    `json:"buin"`
-	AppId   string `json:"appId"`
+	AppID   string `json:"appId"`
 	Encrypt string `json:"encrypt"`
 }
 

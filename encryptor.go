@@ -12,7 +12,7 @@ import (
 )
 
 type RawData struct {
-	AppId  string
+	AppID  string
 	Data   []byte
 	Length int32
 }
@@ -37,19 +37,19 @@ func NewEncryptorWithConfig(config *Config) *Encryptor {
 		panic(err)
 	}
 
-	return NewEncryptor(key, config.AppId)
+	return NewEncryptor(key, config.AppID)
 }
 
 func (e *Encryptor) Encrypt(plaintext []byte) (string, error) {
 	plainText := make([]byte, 0)
 
-	randBs := make([]byte, 16)
+	randBs := make([]byte, 16) // nolint:gomnd
 	_, err := io.ReadFull(rand.Reader, randBs)
 	if err != nil {
 		return "", err
 	}
 
-	lenBs := make([]byte, 4)
+	lenBs := make([]byte, 4) // nolint:gomnd
 	binary.BigEndian.PutUint32(lenBs, uint32(len(plaintext)))
 
 	plainText = append(plainText, randBs...)
@@ -101,8 +101,8 @@ func (e *Encryptor) Decrypt(ciphertext string) (*RawData, error) {
 	}
 
 	result.Data = plainText[20 : 20+result.Length]
-	result.AppId = string(plainText[20+result.Length:])
-	if len(plainText) < int(20+result.Length) {
+	result.AppID = string(plainText[20+result.Length:])
+	if len(plainText) < int(20+result.Length) { // nolint:gomnd
 		return nil, errors.New("invalid ciphertext")
 	}
 
@@ -117,7 +117,7 @@ type pkcs7 struct {
 // newPkcs7 is used to create a new pkcs7.
 func newPkcs7() *pkcs7 {
 	return &pkcs7{
-		blockSize: 32,
+		blockSize: 32, // nolint:gomnd
 	}
 }
 

@@ -10,16 +10,16 @@ type CreateGroupRequest struct {
 }
 
 type CreateGroupResponse struct {
-	Id string `json:"id"`
+	ID string `json:"id"`
 }
 
 type UpdateGroupRequest struct {
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 type GroupUpdateMemberRequest struct {
-	Id       string   `json:"id"`
+	ID       string   `json:"id"`
 	UserList []string `json:"userList"`
 }
 
@@ -30,13 +30,13 @@ type GroupInfoMember struct {
 }
 
 type GroupInfoResponse struct {
-	Id      string            `json:"id"`
+	ID      string            `json:"id"`
 	Name    string            `json:"name"`
 	Members []GroupInfoMember `json:"members"`
 }
 
 type GroupItem struct {
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -48,7 +48,10 @@ type IsGroupMemberResponse struct {
 	Belong bool `json:"belong"`
 }
 
-func (c *Client) CreateGroup(ctx context.Context, request CreateGroupRequest) (response CreateGroupResponse, err error) {
+func (c *Client) CreateGroup(
+	ctx context.Context,
+	request CreateGroupRequest,
+) (response CreateGroupResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/group/create",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
@@ -59,10 +62,10 @@ func (c *Client) CreateGroup(ctx context.Context, request CreateGroupRequest) (r
 	return
 }
 
-func (c *Client) DeleteGroup(ctx context.Context, groupId string) (response Response, err error) {
+func (c *Client) DeleteGroup(ctx context.Context, groupID string) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/group/delete",
 		withRequestAccessToken(),
-		withRequestParamsKV("id", groupId),
+		withRequestParamsKV("id", groupID),
 	)
 	if err != nil {
 		return
@@ -105,11 +108,11 @@ func (c *Client) DelGroupMember(ctx context.Context, request GroupUpdateMemberRe
 	return
 }
 
-func (c *Client) GetGroupInfo(ctx context.Context, groupId string) (response GroupInfoResponse, err error) {
+func (c *Client) GetGroupInfo(ctx context.Context, groupID string) (response GroupInfoResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/group/info",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("id", groupId),
+		withRequestParamsKV("id", groupID),
 	)
 	if err != nil {
 		return
@@ -119,14 +122,14 @@ func (c *Client) GetGroupInfo(ctx context.Context, groupId string) (response Gro
 	return
 }
 
-func (c *Client) GetGroupList(ctx context.Context, userId ...string) (response GroupListResponse, err error) {
+func (c *Client) GetGroupList(ctx context.Context, userID ...string) (response GroupListResponse, err error) {
 	opts := []requestOption{
 		withRequestAccessToken(),
 		withRequestEncrypt(),
 	}
 
-	if len(userId) > 0 {
-		opts = append(opts, withRequestParamsKV("userId", userId[0]))
+	if len(userID) > 0 {
+		opts = append(opts, withRequestParamsKV("userId", userID[0]))
 	}
 
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/group/list", opts...)
@@ -138,12 +141,14 @@ func (c *Client) GetGroupList(ctx context.Context, userId ...string) (response G
 	return
 }
 
-func (c *Client) IsGroupMember(ctx context.Context, groupId string, userId string) (response IsGroupMemberResponse, err error) {
+func (c *Client) IsGroupMember(
+	ctx context.Context, groupID string, userID string,
+) (response IsGroupMemberResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/group/ismember",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("id", groupId),
-		withRequestParamsKV("userId", userId),
+		withRequestParamsKV("id", groupID),
+		withRequestParamsKV("userId", userID),
 	)
 	if err != nil {
 		return

@@ -124,28 +124,35 @@ func (c *Client) SendMpNewsMessage(ctx context.Context, request MpNewsMessageReq
 	return c.SendMessage(ctx, request)
 }
 
-func (c *Client) SendLinkMessage(ctx context.Context, request LinkMessageRequest) (response Response, err error) {
+func (c *Client) SendLinkMessage(
+	ctx context.Context, request LinkMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeLink
 	return c.SendMessage(ctx, request)
 }
 
-func (c *Client) SendExLinkMessage(ctx context.Context, request ExLinkMessageRequest) (response Response, err error) {
+func (c *Client) SendExLinkMessage(
+	ctx context.Context, request ExLinkMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeExLink
 	return c.SendMessage(ctx, request)
 }
 
-func (c *Client) SendSysMessage(ctx context.Context, request MessageSysMessageRequest) (response Response, err error) {
+func (c *Client) SendSysMessage(
+	ctx context.Context, request MessageSysMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeSysMsg
 	return c.SendMessage(ctx, request)
 }
 
-func (c *Client) SendPopWindowMessage(ctx context.Context, request PopWindowMessageRequest) (response Response, err error) {
+func (c *Client) SendPopWindowMessage(
+	ctx context.Context, request PopWindowMessageRequest,
+) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/popwindow",
 		withRequestBody(request),
 		withRequestEncrypt(),
 		withRequestType(SpecialRequestType),
 	)
-
 	if err != nil {
 		return
 	}

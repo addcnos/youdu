@@ -19,18 +19,18 @@ type MessageText struct {
 }
 
 type MessageMedia struct {
-	MediaId string `json:"media_id"`
+	MediaID string `json:"media_id"`
 }
 
 type MessageFile struct {
-	MediaId string `json:"media_id"`
+	MediaID string `json:"media_id"`
 	Name    string `json:"name"`
 	Size    int64  `json:"size"`
 }
 
 type MessageMpNews struct {
 	Title     string `json:"title"`
-	MediaId   string `json:"media_id"`
+	MediaID   string `json:"media_id"`
 	Content   string `json:"content"`
 	Digest    string `json:"digest,omitempty"`
 	ShowFront int    `json:"showFront,omitempty"`
@@ -38,14 +38,14 @@ type MessageMpNews struct {
 
 type MessageLink struct {
 	Title  string `json:"title"`
-	Url    string `json:"url"`
+	URL    string `json:"url"`
 	Action int    `json:"action,omitempty"`
 }
 
 type MessageExLink struct {
 	Title   string `json:"title"`
-	Url     string `json:"url"`
-	MediaId string `json:"media_id"`
+	URL     string `json:"url"`
+	MediaID string `json:"media_id"`
 	Digest  string `json:"digest,omitempty"`
 }
 
@@ -65,13 +65,13 @@ type MessageSysMessageSysMsg struct {
 }
 
 type MessagePopWindow struct {
-	Url      string `json:"url"`
+	URL      string `json:"url"`
 	Tip      string `json:"tip"`
 	Title    string `json:"title"`
 	Width    int    `json:"width"`
 	Height   int    `json:"height"`
 	Duration int    `json:"duration"`
 	Position int    `json:"position"`
-	NoticeId string `json:"notice_id"`
+	NoticeID string `json:"notice_id"`
 	PopMode  int    `json:"pop_mode"`
 }
