@@ -7,7 +7,7 @@ import (
 )
 
 type CreateUserRequest struct {
-	UserId      string      `json:"userId"`
+	UserID      string      `json:"userId"`
 	Name        string      `json:"name"`
 	Gender      int         `json:"gender"`
 	Mobile      string      `json:"mobile"`
@@ -19,7 +19,7 @@ type CreateUserRequest struct {
 }
 
 type UpdateUserRequest struct {
-	UserId    string `json:"userId"`
+	UserID    string `json:"userId"`
 	Name      string `json:"name"`
 	Gender    int    `json:"gender"`
 	Mobile    string `json:"mobile"`
@@ -30,11 +30,11 @@ type UpdateUserRequest struct {
 }
 
 type UpdateUserPositionRequest struct {
-	UserId   string `json:"userId"`
-	DeptId   int    `json:"deptId"`
+	UserID   string `json:"userId"`
+	DeptID   int    `json:"deptId"`
 	Position string `json:"position"`
 	Weight   int    `json:"weight"`
-	SortId   int    `json:"sortId"`
+	SortID   int    `json:"sortId"`
 }
 
 type BatchDeleteUserRequest struct {
@@ -42,14 +42,14 @@ type BatchDeleteUserRequest struct {
 }
 
 type DeptDetail struct {
-	DeptId   int    `json:"deptId"`
+	DeptID   int    `json:"deptId"`
 	Position string `json:"position"`
 	Weight   int    `json:"weight"`
-	SortId   int    `json:"sortId"`
+	SortID   int    `json:"sortId"`
 }
 
 type UserResponse struct {
-	UserId     string       `json:"userId"`
+	UserID     string       `json:"userId"`
 	Name       string       `json:"name"`
 	Gender     int          `json:"gender"`
 	Mobile     string       `json:"mobile"`
@@ -60,7 +60,7 @@ type UserResponse struct {
 }
 
 type UserItem struct {
-	UserId     string       `json:"userId"`
+	UserID     string       `json:"userId"`
 	Name       string       `json:"name"`
 	Gender     int          `json:"gender"`
 	Mobile     string       `json:"mobile,omitempty"`
@@ -79,7 +79,7 @@ type UserEnableStateResponse struct {
 }
 
 type UpdateUserEnableStateRequest struct {
-	UserIdList  []string    `json:"userIdList"`
+	UserIDList  []string    `json:"userIdList"`
 	EnableState EnableState `json:"enableState"`
 }
 
@@ -89,7 +89,6 @@ func (c *Client) CreateUser(ctx context.Context, request CreateUserRequest) (res
 		withRequestEncrypt(),
 		withRequestBody(request),
 	)
-
 	if err != nil {
 		return
 	}
@@ -104,7 +103,6 @@ func (c *Client) UpdateUser(ctx context.Context, request UpdateUserRequest) (res
 		withRequestEncrypt(),
 		withRequestBody(request),
 	)
-
 	if err != nil {
 		return
 	}
@@ -113,13 +111,14 @@ func (c *Client) UpdateUser(ctx context.Context, request UpdateUserRequest) (res
 	return
 }
 
-func (c *Client) UpdateUserPosition(ctx context.Context, request UpdateUserPositionRequest) (response Response, err error) {
+func (c *Client) UpdateUserPosition(
+	ctx context.Context, request UpdateUserPositionRequest,
+) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/positionupdate",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
 		withRequestBody(request),
 	)
-
 	if err != nil {
 		return
 	}
@@ -128,13 +127,12 @@ func (c *Client) UpdateUserPosition(ctx context.Context, request UpdateUserPosit
 	return
 }
 
-func (c *Client) DeleteUser(ctx context.Context, userId string) (response Response, err error) {
+func (c *Client) DeleteUser(ctx context.Context, userID string) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/delete",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("userId", userId),
+		withRequestParamsKV("userId", userID),
 	)
-
 	if err != nil {
 		return
 	}
@@ -149,7 +147,6 @@ func (c *Client) BatchDeleteUser(ctx context.Context, request BatchDeleteUserReq
 		withRequestEncrypt(),
 		withRequestBody(request),
 	)
-
 	if err != nil {
 		return
 	}
@@ -158,11 +155,11 @@ func (c *Client) BatchDeleteUser(ctx context.Context, request BatchDeleteUserReq
 	return
 }
 
-func (c *Client) GetUser(ctx context.Context, userId string) (response UserResponse, err error) {
+func (c *Client) GetUser(ctx context.Context, userID string) (response UserResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/get",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("userId", userId),
+		withRequestParamsKV("userId", userID),
 	)
 	if err != nil {
 		return
@@ -172,11 +169,11 @@ func (c *Client) GetUser(ctx context.Context, userId string) (response UserRespo
 	return
 }
 
-func (c *Client) GetDeptUserList(ctx context.Context, deptId int) (response DeptUserListResponse, err error) {
+func (c *Client) GetDeptUserList(ctx context.Context, deptID int) (response DeptUserListResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/list",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("deptId", strconv.Itoa(deptId)),
+		withRequestParamsKV("deptId", strconv.Itoa(deptID)),
 	)
 	if err != nil {
 		return
@@ -186,11 +183,11 @@ func (c *Client) GetDeptUserList(ctx context.Context, deptId int) (response Dept
 	return
 }
 
-func (c *Client) GetDeptUserSimpleList(ctx context.Context, deptId int) (response DeptUserListResponse, err error) {
+func (c *Client) GetDeptUserSimpleList(ctx context.Context, deptID int) (response DeptUserListResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/simplelist",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("deptId", strconv.Itoa(deptId)),
+		withRequestParamsKV("deptId", strconv.Itoa(deptID)),
 	)
 	if err != nil {
 		return
@@ -200,11 +197,11 @@ func (c *Client) GetDeptUserSimpleList(ctx context.Context, deptId int) (respons
 	return
 }
 
-func (c *Client) GetUserEnableState(ctx context.Context, userId string) (response UserEnableStateResponse, err error) {
+func (c *Client) GetUserEnableState(ctx context.Context, userID string) (response UserEnableStateResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/user/enable/state",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("userId", userId),
+		withRequestParamsKV("userId", userID),
 	)
 	if err != nil {
 		return
@@ -214,13 +211,14 @@ func (c *Client) GetUserEnableState(ctx context.Context, userId string) (respons
 	return
 }
 
-func (c *Client) UpdateUserEnableState(ctx context.Context, request UpdateUserEnableStateRequest) (response Response, err error) {
+func (c *Client) UpdateUserEnableState(
+	ctx context.Context, request UpdateUserEnableStateRequest,
+) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/user/enable/stateupdate",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
 		withRequestBody(request),
 	)
-
 	if err != nil {
 		return
 	}

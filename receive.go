@@ -18,7 +18,7 @@ type ReceiveRequest struct {
 type ReceiveMessage struct {
 	FromUser   string       `json:"fromUser"`
 	CreateTime int          `json:"createTime"`
-	PackageId  string       `json:"packageId"`
+	PackageID  string       `json:"packageId"`
 	MsgType    MsgType      `json:"msgType"`
 	Text       MessageText  `json:"text,omitempty"`
 	Image      MessageMedia `json:"image,omitempty"`

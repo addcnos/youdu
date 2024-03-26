@@ -5,7 +5,7 @@ import "net/http"
 type Config struct {
 	Addr   string
 	Buin   int
-	AppId  string
+	AppID  string
 	AesKey string
 }
 
@@ -23,7 +23,7 @@ func WithEncryptor(encryptor *Encryptor) func(c *Client) {
 	}
 }
 
-func WithHttpClient(client *http.Client) func(c *Client) {
+func WithHTTPClient(client *http.Client) func(c *Client) {
 	return func(c *Client) {
 		c.httpClient = client
 	}

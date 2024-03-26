@@ -7,9 +7,7 @@ import (
 
 type SessionType string
 
-var (
-	SessionMultiType SessionType = "multi"
-)
+var SessionMultiType SessionType = "multi"
 
 type CreateSessionRequest struct {
 	Title   string      `json:"title"`
@@ -19,7 +17,7 @@ type CreateSessionRequest struct {
 }
 
 type UpdateSessionRequest struct {
-	SessionId string   `json:"sessionId"`
+	SessionID string   `json:"sessionId"`
 	OpUser    string   `json:"opUser"`
 	Title     string   `json:"title,omitempty"`
 	AddMember []string `json:"addMember"`
@@ -27,7 +25,7 @@ type UpdateSessionRequest struct {
 }
 
 type SessionResponse struct {
-	SessionId string      `json:"sessionId"`
+	SessionID string      `json:"sessionId"`
 	Title     string      `json:"title"`
 	Owner     string      `json:"owner"`
 	Version   int         `json:"version"`
@@ -35,7 +33,9 @@ type SessionResponse struct {
 	Member    []string    `json:"member"`
 }
 
-func (c *Client) CreateSession(ctx context.Context, request CreateSessionRequest) (response SessionResponse, err error) {
+func (c *Client) CreateSession(
+	ctx context.Context, request CreateSessionRequest,
+) (response SessionResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/session/create",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
@@ -46,11 +46,11 @@ func (c *Client) CreateSession(ctx context.Context, request CreateSessionRequest
 	return
 }
 
-func (c *Client) GetSession(ctx context.Context, sessionId string) (response SessionResponse, err error) {
+func (c *Client) GetSession(ctx context.Context, sessionID string) (response SessionResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodGet, "/cgi/session/get",
 		withRequestAccessToken(),
 		withRequestEncrypt(),
-		withRequestParamsKV("sessionId", sessionId),
+		withRequestParamsKV("sessionId", sessionID),
 	)
 	if err != nil {
 		return
@@ -60,7 +60,9 @@ func (c *Client) GetSession(ctx context.Context, sessionId string) (response Ses
 	return
 }
 
-func (c *Client) UpdateSession(ctx context.Context, request UpdateSessionRequest) (response SessionResponse, err error) {
+func (c *Client) UpdateSession(
+	ctx context.Context, request UpdateSessionRequest,
+) (response SessionResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/session/update",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
@@ -83,7 +85,7 @@ var (
 )
 
 type SessionMessageResponse struct {
-	SessionId string       `json:"sessionId,omitempty"`
+	SessionID string       `json:"sessionId,omitempty"`
 	Receiver  string       `json:"receiver,omitempty"`
 	Sender    string       `json:"sender"`
 	MsgType   MsgType      `json:"msgType"`
@@ -95,7 +97,7 @@ type SessionMessageResponse struct {
 }
 
 type TextSessionMessageRequest struct {
-	SessionId string      `json:"sessionId,omitempty"`
+	SessionID string      `json:"sessionId,omitempty"`
 	Receiver  string      `json:"receiver,omitempty"`
 	Sender    string      `json:"sender"`
 	MsgType   MsgType     `json:"msgType"`
@@ -103,7 +105,7 @@ type TextSessionMessageRequest struct {
 }
 
 type ImageSessionMessageRequest struct {
-	SessionId string       `json:"sessionId,omitempty"`
+	SessionID string       `json:"sessionId,omitempty"`
 	Receiver  string       `json:"receiver,omitempty"`
 	Sender    string       `json:"sender"`
 	MsgType   MsgType      `json:"msgType"`
@@ -111,7 +113,7 @@ type ImageSessionMessageRequest struct {
 }
 
 type FileSessionMessageRequest struct {
-	SessionId string      `json:"sessionId,omitempty"`
+	SessionID string      `json:"sessionId,omitempty"`
 	Receiver  string      `json:"receiver,omitempty"`
 	Sender    string      `json:"sender"`
 	MsgType   MsgType     `json:"msgType"`
@@ -119,7 +121,7 @@ type FileSessionMessageRequest struct {
 }
 
 type VoiceSessionMessageRequest struct {
-	SessionId string       `json:"sessionId,omitempty"`
+	SessionID string       `json:"sessionId,omitempty"`
 	Receiver  string       `json:"receiver,omitempty"`
 	Sender    string       `json:"sender"`
 	MsgType   MsgType      `json:"msgType"`
@@ -127,14 +129,17 @@ type VoiceSessionMessageRequest struct {
 }
 
 type VideoSessionMessageRequest struct {
-	SessionId string       `json:"sessionId,omitempty"`
+	SessionID string       `json:"sessionId,omitempty"`
 	Receiver  string       `json:"receiver,omitempty"`
 	Sender    string       `json:"sender"`
 	MsgType   MsgType      `json:"msgType"`
 	Video     MessageMedia `json:"video"`
 }
 
-func (c *Client) SendSessionMessage(ctx context.Context, request InterfaceSessionMessageRequest) (response Response, err error) {
+func (c *Client) SendSessionMessage(
+	ctx context.Context,
+	request InterfaceSessionMessageRequest,
+) (response Response, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/session/send",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
@@ -145,27 +150,37 @@ func (c *Client) SendSessionMessage(ctx context.Context, request InterfaceSessio
 	return
 }
 
-func (c *Client) SendTextSessionMessage(ctx context.Context, request TextSessionMessageRequest) (response Response, err error) {
+func (c *Client) SendTextSessionMessage(
+	ctx context.Context, request TextSessionMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeText
 	return c.SendSessionMessage(ctx, request)
 }
 
-func (c *Client) SendImageSessionMessage(ctx context.Context, request ImageSessionMessageRequest) (response Response, err error) {
+func (c *Client) SendImageSessionMessage(
+	ctx context.Context, request ImageSessionMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeImage
 	return c.SendSessionMessage(ctx, request)
 }
 
-func (c *Client) SendFileSessionMessage(ctx context.Context, request FileSessionMessageRequest) (response Response, err error) {
+func (c *Client) SendFileSessionMessage(
+	ctx context.Context, request FileSessionMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeFile
 	return c.SendSessionMessage(ctx, request)
 }
 
-func (c *Client) SendVoiceSessionMessage(ctx context.Context, request VoiceSessionMessageRequest) (response Response, err error) {
+func (c *Client) SendVoiceSessionMessage(
+	ctx context.Context, request VoiceSessionMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeVoice
 	return c.SendSessionMessage(ctx, request)
 }
 
-func (c *Client) SendVideoSessionMessage(ctx context.Context, request VideoSessionMessageRequest) (response Response, err error) {
+func (c *Client) SendVideoSessionMessage(
+	ctx context.Context, request VideoSessionMessageRequest,
+) (response Response, err error) {
 	request.MsgType = MsgTypeVideo
 	return c.SendSessionMessage(ctx, request)
 }

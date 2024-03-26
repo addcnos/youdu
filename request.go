@@ -10,20 +10,18 @@ import (
 	"net/url"
 )
 
-var (
-	ErrUnexpectedResponseCode = errors.New("youdu sdk: unexpected response code")
-)
+var ErrUnexpectedResponseCode = errors.New("youdu sdk: unexpected response code")
 
 type requestType string
 
 type NormalRequest struct {
 	Buin    int    `json:"buin"`
-	AppId   string `json:"appId"`
+	AppID   string `json:"appId"`
 	Encrypt string `json:"encrypt"`
 }
 
 type SpecialRequest struct {
-	AppId      string `json:"app_Id"`
+	AppID      string `json:"app_Id"`
 	MsgEncrypt string `json:"msg_encrypt"`
 }
 
@@ -109,7 +107,9 @@ func withRequestType(rt requestType) requestOption {
 	}
 }
 
-func (c *Client) newRequest(ctx context.Context, method string, path string, opts ...requestOption) (req *http.Request, err error) {
+func (c *Client) newRequest(
+	ctx context.Context, method string, path string, opts ...requestOption,
+) (req *http.Request, err error) {
 	var (
 		opt     = newRequestOptions(opts...)
 		urlPath = c.config.Addr + path
@@ -123,11 +123,11 @@ func (c *Client) newRequest(ctx context.Context, method string, path string, opt
 
 	// access_token
 	if opt.needAccessToken {
-		if token, err := c.GetToken(ctx); err != nil {
+		token, err := c.GetToken(ctx)
+		if err != nil {
 			return nil, err
-		} else {
-			opt.params.Add("accessToken", token)
 		}
+		opt.params.Add("accessToken", token)
 	}
 
 	req, err = http.NewRequestWithContext(ctx, method, urlPath+"?"+opt.params.Encode(), bodyReader)
@@ -156,13 +156,13 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 	switch opt.requestType {
 	case SpecialRequestType:
 		return opt.bodyReader(SpecialRequest{
-			AppId:      c.config.AppId,
+			AppID:      c.config.AppID,
 			MsgEncrypt: cipherText,
 		})
 	case NormalRequestType:
 		return opt.bodyReader(NormalRequest{
 			Buin:    c.config.Buin,
-			AppId:   c.config.AppId,
+			AppID:   c.config.AppID,
 			Encrypt: cipherText,
 		})
 	default:
