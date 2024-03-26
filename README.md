@@ -32,6 +32,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"time"
 
 	"github.com/addcnos/youdu/v2"
 )
@@ -40,9 +42,11 @@ func main() {
 	client := youdu.NewClient(&youdu.Config{
 		Addr:   "http://examaple",
 		Buin:   111222333,
-		AppId:  "111222333",
+		AppID:  "111222333",
 		AesKey: "111333445",
-	})
+	}, youdu.WithHTTPClient(&http.Client{
+		Timeout: 3 * time.Second,
+	}))
 
 	resp, err := client.SendTextMessage(context.Background(), youdu.TextMessageRequest{
 		ToUser:  "11111",
@@ -57,6 +61,7 @@ func main() {
 
 	fmt.Println(resp)
 }
+
 ```
 
 ## Contributing
