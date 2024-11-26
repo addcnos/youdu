@@ -7,6 +7,10 @@ on:
     branches:
       - 1.x
       - 2.x
+  push:
+    branches:
+      - 1.x
+      - 2.x
 
 jobs:
   golangci:
