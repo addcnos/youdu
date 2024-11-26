@@ -3,9 +3,6 @@ name: Lint
 on:
   tags:
     - v*
-  branches:
-    - master
-    - main
   pull_request:
     branches:
       - 1.x
