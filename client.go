@@ -41,7 +41,7 @@ func NewClient(config *Config, opts ...ClientOption) *Client {
 	}
 
 	if c.httpClient == nil {
-		c.httpClient = http.DefaultClient
+		c.httpClient = defaultHTTPClient
 	}
 
 	if c.encryptor == nil {
