@@ -6,14 +6,14 @@ linters:
     - dogsled
     - durationcheck
     - errcheck
-    - exportloopref
+    - copyloopvar
     - govet
     - gosimple
     - gofmt
     - gofumpt
     - goconst
     - goimports
-    - gomnd
+    - mnd
     - gocyclo
     - ineffassign
     - lll
