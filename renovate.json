@@ -2,5 +2,18 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "labels": ["dependencies"],
+  "separateMajorMinor": true,
+  "postUpdateOptions": ["gomodTidy"],
+  "constraints": {
+    "go": "1.20"
+  },
+  "packageRules": [
+    {
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "enabled": true
+    }
   ]
 }
