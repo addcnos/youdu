@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type InterfaceMessageRequest interface{}
+type InterfaceMessageRequest any
 
 var (
 	_ InterfaceMessageRequest = MessageRequest{}

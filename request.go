@@ -32,7 +32,7 @@ const (
 
 type requestOptions struct {
 	params          url.Values
-	body            interface{}
+	body            any
 	needEncrypt     bool
 	needAccessToken bool
 	requestType     requestType
@@ -52,7 +52,7 @@ func newRequestOptions(opts ...requestOption) *requestOptions {
 	return args
 }
 
-func (r *requestOptions) bodyReader(body interface{}) (io.Reader, error) {
+func (r *requestOptions) bodyReader(body any) (io.Reader, error) {
 	if body == nil {
 		return nil, nil
 	}
@@ -71,7 +71,7 @@ func (r *requestOptions) bodyReader(body interface{}) (io.Reader, error) {
 
 type requestOption func(*requestOptions)
 
-func withRequestBody(body interface{}) requestOption {
+func withRequestBody(body any) requestOption {
 	return func(args *requestOptions) {
 		args.body = body
 	}
@@ -170,7 +170,7 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 	}
 }
 
-func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...responseOption) error {
+func (c *Client) sendRequest(req *http.Request, resp any, opts ...responseOption) error {
 	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
