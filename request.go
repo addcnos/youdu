@@ -175,7 +175,7 @@ func (c *Client) sendRequest(req *http.Request, resp interface{}, opts ...respon
 	if err != nil {
 		return err
 	}
-	defer res.Body.Close()
+	defer res.Body.Close() // nolint:errcheck
 
 	if res.StatusCode != http.StatusOK {
 		return ErrUnexpectedResponseCode
