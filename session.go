@@ -73,7 +73,7 @@ func (c *Client) UpdateSession(
 	return
 }
 
-type InterfaceSessionMessageRequest interface{}
+type InterfaceSessionMessageRequest any
 
 var (
 	_ InterfaceSessionMessageRequest = SessionMessageResponse{}

@@ -33,7 +33,7 @@ func withResponseDecrypt() responseOption {
 	}
 }
 
-func (c *Client) decodeResponse(body io.Reader, resp interface{}, opts ...responseOption) error {
+func (c *Client) decodeResponse(body io.Reader, resp any, opts ...responseOption) error {
 	opt := newResponseOptions(opts...)
 
 	if !opt.needDecrypt {
@@ -43,7 +43,7 @@ func (c *Client) decodeResponse(body io.Reader, resp interface{}, opts ...respon
 	return c.decodeResponseWithDecrypt(body, resp, opts...)
 }
 
-func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp interface{}, _ ...responseOption) error {
+func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp any, _ ...responseOption) error {
 	var r Response
 	if err := json.NewDecoder(body).Decode(&r); err != nil {
 		return err
