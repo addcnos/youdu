@@ -8,7 +8,7 @@
         <img src="https://img.shields.io/badge/Language-Golang-blue.svg" alt="Language">
         <a target="_blank" href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-brightgreen.svg" alt="MIT license"></a>
     </p>
-    <p>🚀 Youdu SDK is a Go package that provides API implementation related to <a href="https://youdu.im/doc/api/c01_00002.html" target="_blank">Youdu IM</a></p>
+    <p>🚀 Youdu SDK is a Go package that provides API implementation related to <a href="https://youdu.cn/doc#41" target="_blank">Youdu IM</a></p>
 </div>
 
 
