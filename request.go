@@ -184,6 +184,7 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 		return nil, errors.New("youdu sdk: unknown request type")
 	}
 }
+
 func (c *Client) uploadRequestBody(opt *requestOptions) (any, error) {
 	req := opt.body
 	uploadReq, ok := req.(UploadMediaRequest)

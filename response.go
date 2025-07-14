@@ -36,7 +36,6 @@ func withResponseDecrypt() responseOption {
 func withResponseBodyDecrypt() responseOption {
 	return func(args *responseOptions) {
 		args.bodyDecrypt = true
-
 	}
 }
 
