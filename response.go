@@ -13,6 +13,7 @@ type Response struct {
 
 type responseOptions struct {
 	needDecrypt bool
+	bodyDecrypt bool
 }
 
 type responseOption func(*responseOptions)
@@ -23,7 +24,6 @@ func newResponseOptions(opts ...responseOption) *responseOptions {
 	for _, opt := range opts {
 		opt(args)
 	}
-
 	return args
 }
 
@@ -33,8 +33,19 @@ func withResponseDecrypt() responseOption {
 	}
 }
 
+func withResponseBodyDecrypt() responseOption {
+	return func(args *responseOptions) {
+		args.bodyDecrypt = true
+
+	}
+}
+
 func (c *Client) decodeResponse(body io.Reader, resp any, opts ...responseOption) error {
 	opt := newResponseOptions(opts...)
+
+	if opt.bodyDecrypt {
+		return c.decodeResponseWithBodyDecrypt(body, resp, opts...)
+	}
 
 	if !opt.needDecrypt {
 		return json.NewDecoder(body).Decode(resp)
@@ -66,4 +77,24 @@ func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp any, _ ...respon
 	}
 
 	return json.Unmarshal(rawData.Data, resp)
+}
+
+func (c *Client) decodeResponseWithBodyDecrypt(body io.Reader, resp any, _ ...responseOption) error {
+	bodyBytes, err := io.ReadAll(body)
+	if err != nil {
+		return err
+	}
+	rawData, err := c.encryptor.Decrypt(string(bodyBytes))
+	if err != nil {
+		return err
+	}
+
+	if rawData.Data == nil {
+		return newError(-1, "decrypted data is nil")
+	}
+	if target, ok := resp.(*[]byte); ok {
+		*target = rawData.Data
+		return nil
+	}
+	return nil
 }
