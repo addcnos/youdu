@@ -28,7 +28,10 @@ type SearchMediaResponse struct {
 	Size int32  `json:"size"`
 }
 
-func (c *Client) DownloadMedia(ctx context.Context, request DownloadMediaRequest) (response []byte, err error) {
+func (c *Client) DownloadMedia(
+	ctx context.Context,
+	request DownloadMediaRequest,
+) (response []byte, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/media/get",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
@@ -39,7 +42,10 @@ func (c *Client) DownloadMedia(ctx context.Context, request DownloadMediaRequest
 	return
 }
 
-func (c *Client) UploadMedia(ctx context.Context, req UploadMediaRequest) (response UploadMediaResponse, err error) {
+func (c *Client) UploadMedia(
+	ctx context.Context,
+	req UploadMediaRequest,
+) (response UploadMediaResponse, err error) {
 	request, err := c.newRequest(ctx, http.MethodPost, "/cgi/media/upload",
 		withRequestBody(req), withRequestAccessToken(), withRequestEncrypt(), withRequestType(UploadRequestType))
 	if err != nil {
@@ -49,7 +55,10 @@ func (c *Client) UploadMedia(ctx context.Context, req UploadMediaRequest) (respo
 	return
 }
 
-func (c *Client) SearchMedia(ctx context.Context, request SearchMediaRequest) (response SearchMediaResponse, err error) {
+func (c *Client) SearchMedia(
+	ctx context.Context,
+	request SearchMediaRequest,
+) (response SearchMediaResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/media/search",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
