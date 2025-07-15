@@ -30,7 +30,7 @@ type SpecialRequest struct {
 const (
 	NormalRequestType  requestType = "normal"
 	SpecialRequestType requestType = "special"
-	UploadRequestType  requestType = "upload"
+	uploadRequestType  requestType = "upload"
 )
 
 type requestOptions struct {
@@ -135,6 +135,9 @@ func (c *Client) newRequest(
 	}
 
 	req, err = http.NewRequestWithContext(ctx, method, urlPath+"?"+opt.params.Encode(), bodyReader)
+	if err != nil {
+		return nil, err
+	}
 
 	if opt.contentType != "" {
 		req.Header.Set("Content-Type", opt.contentType)
@@ -174,7 +177,7 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 			AppID:   c.config.AppID,
 			Encrypt: cipherText,
 		})
-	case UploadRequestType:
+	case uploadRequestType:
 		bodyReader, err := c.uploadRequestBody(opt)
 		if err != nil {
 			return nil, err
@@ -192,7 +195,7 @@ func (c *Client) uploadRequestBody(opt *requestOptions) (any, error) {
 		return nil, fmt.Errorf("invalid request type %T", req)
 	}
 
-	body := bytes.NewBufferString("")
+	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 
 	if err := writer.WriteField("buin", fmt.Sprint(c.config.Buin)); err != nil {
@@ -205,7 +208,7 @@ func (c *Client) uploadRequestBody(opt *requestOptions) (any, error) {
 	meta := struct {
 		Type string `json:"type"`
 		Name string `json:"name"`
-	}{uploadReq.FileType, uploadReq.FileName}
+	}{string(uploadReq.FileType), uploadReq.FileName}
 
 	metaBytes, err := json.Marshal(meta)
 	if err != nil {
@@ -226,7 +229,12 @@ func (c *Client) uploadRequestBody(opt *requestOptions) (any, error) {
 		return nil, err
 	}
 
-	encryptedFile, err := c.encryptor.Encrypt(uploadReq.File)
+	fileBytes, err := io.ReadAll(uploadReq.File)
+	if err != nil {
+		return nil, fmt.Errorf("read file failed: %w", err)
+	}
+
+	encryptedFile, err := c.encryptor.Encrypt(fileBytes)
 	if err != nil {
 		return nil, err
 	}
@@ -254,5 +262,5 @@ func (c *Client) sendRequest(req *http.Request, resp any, opts ...responseOption
 		return ErrUnexpectedResponseCode
 	}
 
-	return c.decodeResponse(res.Body, resp, opts...)
+	return c.decodeResponse(res.Header, res.Body, resp, opts...)
 }

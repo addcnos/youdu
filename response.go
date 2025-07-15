@@ -3,6 +3,7 @@ package youdu
 import (
 	"encoding/json"
 	"io"
+	"net/http"
 )
 
 type Response struct {
@@ -39,11 +40,11 @@ func withResponseBodyDecrypt() responseOption {
 	}
 }
 
-func (c *Client) decodeResponse(body io.Reader, resp any, opts ...responseOption) error {
+func (c *Client) decodeResponse(header http.Header, body io.Reader, resp any, opts ...responseOption) error {
 	opt := newResponseOptions(opts...)
 
 	if opt.bodyDecrypt {
-		return c.decodeResponseWithBodyDecrypt(body, resp, opts...)
+		return c.decodeResponseWithBodyDecrypt(header, body, resp, opts...)
 	}
 
 	if !opt.needDecrypt {
@@ -78,11 +79,26 @@ func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp any, _ ...respon
 	return json.Unmarshal(rawData.Data, resp)
 }
 
-func (c *Client) decodeResponseWithBodyDecrypt(body io.Reader, resp any, _ ...responseOption) error {
+func (c *Client) decodeResponseWithBodyDecrypt(header http.Header, body io.Reader, resp any, _ ...responseOption) error {
+	encryptHeader := header.Get("Encrypt")
+	if encryptHeader == "" {
+		return newError(-1, "missing 'Encrypt' header")
+	}
+
+	headerData, err := c.encryptor.Decrypt(encryptHeader)
+	if err != nil {
+		return newError(-1, "header decrypt failed")
+	}
+
+	if err := json.Unmarshal(headerData.Data, resp); err != nil {
+		return newError(-1, "headerData unmarshal failed")
+	}
+
 	bodyBytes, err := io.ReadAll(body)
 	if err != nil {
 		return err
 	}
+
 	rawData, err := c.encryptor.Decrypt(string(bodyBytes))
 	if err != nil {
 		return err
@@ -91,9 +107,10 @@ func (c *Client) decodeResponseWithBodyDecrypt(body io.Reader, resp any, _ ...re
 	if rawData.Data == nil {
 		return newError(-1, "decrypted data is nil")
 	}
-	if target, ok := resp.(*[]byte); ok {
-		*target = rawData.Data
-		return nil
+
+	if r, ok := resp.(*GetMediaResponse); ok {
+		r.File = rawData.Data
 	}
+
 	return nil
 }

@@ -2,21 +2,37 @@ package youdu
 
 import (
 	"context"
+	"io"
 	"net/http"
 )
 
+type FileType string
+
+const (
+	FileTypeImage FileType = "image"
+	FileTypeFile  FileType = "file"
+	FileTypeVoice FileType = "voice"
+	FileTypeVideo FileType = "video"
+)
+
 type UploadMediaRequest struct {
-	File     []byte `json:"file"`
-	FileName string `json:"name"`
-	FileType string `json:"fileType"`
+	File     io.Reader `json:"-"`
+	FileName string    `json:"name"`
+	FileType FileType  `json:"fileType"`
 }
 
 type UploadMediaResponse struct {
 	MediaID string `json:"mediaId"`
 }
 
-type DownloadMediaRequest struct {
+type GetMediaRequest struct {
 	MediaID string `json:"mediaId"`
+}
+
+type GetMediaResponse struct {
+	Name string `json:"name"`
+	Size int32  `json:"size"`
+	File []byte `json:"file"`
 }
 
 type SearchMediaRequest struct {
@@ -28,10 +44,10 @@ type SearchMediaResponse struct {
 	Size int32  `json:"size"`
 }
 
-func (c *Client) DownloadMedia(
+func (c *Client) GetMedia(
 	ctx context.Context,
-	request DownloadMediaRequest,
-) (response []byte, err error) {
+	request GetMediaRequest,
+) (response GetMediaResponse, err error) {
 	req, err := c.newRequest(ctx, http.MethodPost, "/cgi/media/get",
 		withRequestBody(request), withRequestAccessToken(), withRequestEncrypt())
 	if err != nil {
@@ -47,7 +63,7 @@ func (c *Client) UploadMedia(
 	req UploadMediaRequest,
 ) (response UploadMediaResponse, err error) {
 	request, err := c.newRequest(ctx, http.MethodPost, "/cgi/media/upload",
-		withRequestBody(req), withRequestAccessToken(), withRequestEncrypt(), withRequestType(UploadRequestType))
+		withRequestBody(req), withRequestAccessToken(), withRequestEncrypt(), withRequestType(uploadRequestType))
 	if err != nil {
 		return
 	}
