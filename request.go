@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"mime/multipart"
 	"net/http"
 	"net/url"
@@ -198,6 +199,12 @@ func (c *Client) uploadRequestBody(opt *requestOptions) (any, error) {
 	body := new(bytes.Buffer)
 	writer := multipart.NewWriter(body)
 
+	defer func() {
+		if err := writer.Close(); err != nil {
+			log.Printf("failed to close multipart writer: %v", err)
+		}
+	}()
+
 	if err := writer.WriteField("buin", fmt.Sprint(c.config.Buin)); err != nil {
 		return nil, err
 	}
@@ -243,11 +250,6 @@ func (c *Client) uploadRequestBody(opt *requestOptions) (any, error) {
 		return nil, err
 	}
 	opt.contentType = writer.FormDataContentType()
-
-	if err := writer.Close(); err != nil {
-		return nil, err
-	}
-
 	return body, nil
 }
 
