@@ -1,6 +1,7 @@
 package youdu
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -113,7 +114,7 @@ func (c *Client) decodeResponseWithBodyDecrypt(
 	}
 
 	if r, ok := resp.(*GetMediaResponse); ok {
-		r.File = rawData.Data
+		r.File = bytes.NewReader(rawData.Data)
 	}
 
 	return nil

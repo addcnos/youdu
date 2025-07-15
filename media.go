@@ -30,9 +30,9 @@ type GetMediaRequest struct {
 }
 
 type GetMediaResponse struct {
-	Name string `json:"name"`
-	Size int32  `json:"size"`
-	File []byte `json:"file"`
+	Name string    `json:"name"`
+	Size int32     `json:"size"`
+	File io.Reader `json:"file"`
 }
 
 type SearchMediaRequest struct {
