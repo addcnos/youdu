@@ -79,7 +79,11 @@ func (c *Client) decodeResponseWithDecrypt(body io.Reader, resp any, _ ...respon
 	return json.Unmarshal(rawData.Data, resp)
 }
 
-func (c *Client) decodeResponseWithBodyDecrypt(header http.Header, body io.Reader, resp any, _ ...responseOption) error {
+func (c *Client) decodeResponseWithBodyDecrypt(
+	header http.Header,
+	body io.Reader,
+	resp any, _ ...responseOption,
+) error {
 	encryptHeader := header.Get("Encrypt")
 	if encryptHeader == "" {
 		return newError(-1, "missing 'Encrypt' header")
