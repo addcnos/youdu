@@ -95,9 +95,9 @@
 
 ## 素材管理
 
-- [ ] 上传素材文件
-- [ ] 下载素材文件
-- [ ] 查询素材文件信息
+- [x] 上传素材文件 `media.go@UploadMedia`
+- [x] 下载素材文件 `media.go@GetMedia`
+- [x] 查询素材文件信息 `media.go@SearchMedia`
 
 ## 应用消息回调
 
