@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 )
@@ -28,6 +30,7 @@ type SpecialRequest struct {
 const (
 	NormalRequestType  requestType = "normal"
 	SpecialRequestType requestType = "special"
+	uploadRequestType  requestType = "upload"
 )
 
 type requestOptions struct {
@@ -36,6 +39,7 @@ type requestOptions struct {
 	needEncrypt     bool
 	needAccessToken bool
 	requestType     requestType
+	contentType     string
 }
 
 func newRequestOptions(opts ...requestOption) *requestOptions {
@@ -131,6 +135,14 @@ func (c *Client) newRequest(
 	}
 
 	req, err = http.NewRequestWithContext(ctx, method, urlPath+"?"+opt.params.Encode(), bodyReader)
+	if err != nil {
+		return nil, err
+	}
+
+	if opt.contentType != "" {
+		req.Header.Set("Content-Type", opt.contentType)
+	}
+
 	return
 }
 
@@ -165,9 +177,77 @@ func (c *Client) encodeRequestBody(opt *requestOptions) (io.Reader, error) {
 			AppID:   c.config.AppID,
 			Encrypt: cipherText,
 		})
+	case uploadRequestType:
+		bodyReader, err := c.uploadRequestBody(opt)
+		if err != nil {
+			return nil, err
+		}
+		return opt.bodyReader(bodyReader)
 	default:
 		return nil, errors.New("youdu sdk: unknown request type")
 	}
+}
+
+func (c *Client) uploadRequestBody(opt *requestOptions) (any, error) {
+	req := opt.body
+	uploadReq, ok := req.(UploadMediaRequest)
+	if !ok {
+		return nil, fmt.Errorf("invalid request type %T", req)
+	}
+
+	body := new(bytes.Buffer)
+	writer := multipart.NewWriter(body)
+
+	defer func() {
+		_ = writer.Close()
+	}()
+
+	if err := writer.WriteField("buin", fmt.Sprint(c.config.Buin)); err != nil {
+		return nil, err
+	}
+	if err := writer.WriteField("appId", c.config.AppID); err != nil {
+		return nil, err
+	}
+
+	meta := struct {
+		Type string `json:"type"`
+		Name string `json:"name"`
+	}{string(uploadReq.FileType), uploadReq.FileName}
+
+	metaBytes, err := json.Marshal(meta)
+	if err != nil {
+		return nil, err
+	}
+
+	encryptedMeta, err := c.encryptor.Encrypt(metaBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := writer.WriteField("encrypt", encryptedMeta); err != nil {
+		return nil, err
+	}
+
+	filePart, err := writer.CreateFormFile("file", uploadReq.FileName)
+	if err != nil {
+		return nil, err
+	}
+
+	fileBytes, err := io.ReadAll(uploadReq.File)
+	if err != nil {
+		return nil, fmt.Errorf("read file failed: %w", err)
+	}
+
+	encryptedFile, err := c.encryptor.Encrypt(fileBytes)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := filePart.Write([]byte(encryptedFile)); err != nil {
+		return nil, err
+	}
+	opt.contentType = writer.FormDataContentType()
+	return body, nil
 }
 
 func (c *Client) sendRequest(req *http.Request, resp any, opts ...responseOption) error {
@@ -181,5 +261,5 @@ func (c *Client) sendRequest(req *http.Request, resp any, opts ...responseOption
 		return ErrUnexpectedResponseCode
 	}
 
-	return c.decodeResponse(res.Body, resp, opts...)
+	return c.decodeResponse(res.Header, res.Body, resp, opts...)
 }
